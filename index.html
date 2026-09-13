@@ -3,279 +3,3002 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gomes &amp; Gonzaga Advocacia — Direitos que você tem. Proteção que você merece.</title>
-<meta name="description" content="Gomes &amp; Gonzaga Advocacia — atuação em Direito Trabalhista, Família, Cível e Consumidor, Previdenciário e Criminal, com ética, compromisso e dedicação.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<title>CATFlow</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --text: #1A1A1A;
+    --text-secondary: #4A4A4A;
+    --brand: #0F5C4C;
+    --brand-dark: #0A3F34;
+    --success: #1E7A3D;
+    --warning: #B45309;
+    --danger: #B91C1C;
+    --card-bg: #F7F7F7;
+    --border: #E0E0E0;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  button { font-family: inherit; }
+
+  /* ===== LOGIN ===== */
+  #tela-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-box {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .login-logo { font-size: 28px; font-weight: 700; color: var(--brand); margin-bottom: 4px; letter-spacing: -0.5px; }
+  .login-subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 28px; }
+  .campo { text-align: left; margin-bottom: 16px; }
+  .campo label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .campo input, .campo select, .campo textarea {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px; background: #fff; color: var(--text);
+  }
+  .campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--brand); }
+  .btn-entrar {
+    width: 100%; padding: 12px; background: var(--brand); color: #fff; border: none;
+    border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px;
+  }
+  .btn-entrar:hover { background: var(--brand-dark); }
+  .btn-entrar:disabled { opacity: 0.6; cursor: not-allowed; }
+  .msg-erro { color: var(--danger); font-size: 13px; margin-top: 14px; display: none; }
+  .msg-sucesso { color: var(--success); font-size: 13px; margin-top: 14px; display: none; }
+
+  /* ===== APP LAYOUT ===== */
+  #app { display: none; min-height: 100vh; }
+  .topbar {
+    background: var(--brand); color: #fff; padding: 14px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .topbar .marca { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .topbar .usuario-info { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+  .badge-papel {
+    background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 6px;
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .btn-sair {
+    background: transparent; border: 1px solid rgba(255,255,255,0.4); color: #fff;
+    padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;
+  }
+  .btn-sair:hover { background: rgba(255,255,255,0.1); }
+  select#seletor-tenant {
+    background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 6px; padding: 5px 8px; font-size: 13px;
+  }
+  select#seletor-tenant option { color: #000; }
+
+  .layout { display: flex; }
+  .sidebar {
+    width: 220px; min-height: calc(100vh - 57px); background: var(--card-bg);
+    border-right: 1px solid var(--border); padding: 16px 0; flex-shrink: 0;
+  }
+  .sidebar button {
+    display: block; width: 100%; text-align: left; padding: 12px 22px;
+    background: none; border: none; font-size: 14px; color: var(--text);
+    cursor: pointer; border-left: 3px solid transparent;
+  }
+  .sidebar button:hover { background: rgba(15,92,76,0.08); }
+  .sidebar button.ativo { border-left-color: var(--brand); color: var(--brand); font-weight: 700; background: rgba(15,92,76,0.08); }
+
+  .conteudo { flex: 1; padding: 28px 32px; max-width: 1600px; }
+  .conteudo h1 { font-size: 21px; margin: 0 0 4px 0; }
+  .conteudo .sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 22px; }
+
+  .card-info { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+  .card-info p { margin: 8px 0; font-size: 14px; }
+  .card-info strong { color: var(--brand); }
+
+  .view { display: none; }
+  .view.ativa { display: block; }
+
+  .painel {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 20px;
+  }
+  .painel h2 { font-size: 16px; margin: 0 0 14px 0; }
+
+  .linha-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .linha-form .campo { flex: 1; min-width: 180px; margin-bottom: 0; }
+
+  .btn {
+    padding: 10px 18px; border-radius: 8px; border: none; font-size: 13px;
+    font-weight: 600; cursor: pointer; background: var(--brand); color: #fff;
+  }
+  .btn:hover { background: var(--brand-dark); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secundario { background: #fff; color: var(--brand); border: 1px solid var(--brand); }
+  .btn-secundario:hover { background: rgba(15,92,76,0.06); }
+  .btn-perigo { background: var(--danger); }
+  .btn-perigo:hover { background: #9c1919; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 8px; background: #EFEFEF; color: var(--text-secondary); font-weight: 700; font-size: 12px; text-transform: uppercase; }
+  td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:hover td { background: rgba(15,92,76,0.03); }
+  .tabela-wrap { overflow-x: auto; max-height: 480px; overflow-y: auto; }
+
+  .resumo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin-bottom: 18px; }
+  .resumo-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+  .resumo-card .num { font-size: 22px; font-weight: 700; color: var(--brand); }
+  .resumo-card .lbl { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  select.status-select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 12px; }
+  .selo { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 700; }
+  .selo-verde { background: rgba(30,122,61,0.12); color: var(--success); }
+  .selo-laranja { background: rgba(180,83,9,0.12); color: var(--warning); }
+  .selo-vermelho { background: rgba(185,28,28,0.12); color: var(--danger); }
+
+  .vazio { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 13px; }
+  .celula-lesao { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: help; }
+
+  .ml-layout { display: flex; gap: 16px; align-items: flex-start; }
+  .ml-detalhe { flex: 1.6; min-height: 400px; }
+  .ml-lista { flex: 1; max-width: 340px; }
+
+  .ml-item {
+    padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 4px;
+    border: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .ml-item:hover { background: rgba(15,92,76,0.06); }
+  .ml-item.ativo { background: rgba(15,92,76,0.1); border-color: var(--brand); }
+  .ml-item .ml-item-nome { font-size: 13px; font-weight: 700; }
+  .ml-item .ml-item-cpf { font-size: 12px; color: var(--text-secondary); }
+  .ml-item .selo { flex-shrink: 0; }
+
+  .ml-det-nome { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
+  .ml-det-recebido { font-size: 12px; color: var(--text-secondary); float: right; }
+  .ml-det-linha { margin: 10px 0; font-size: 14px; }
+  .ml-det-linha strong { color: var(--brand); margin-right: 4px; }
+  .ml-det-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; margin: 14px 0; }
+  .ml-det-botoes { display: flex; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+  .ml-det-dica { font-size: 12px; color: var(--text-secondary); margin: 4px 0; }
+  .ml-det-form { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .ml-det-form label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .ml-det-form select, .ml-det-form textarea {
+    width: 100%; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; margin-bottom: 12px;
+  }
+  .ml-det-form textarea { min-height: 70px; resize: vertical; font-family: inherit; }
+  .aviso-box {
+    background: rgba(180,83,9,0.08); border: 1px solid var(--warning); color: var(--warning);
+    padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px;
+  }
+</style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a href="#home" class="brand-mark">
-      <img src="https://szkknvtqptdeffknnllx.supabase.co/storage/v1/object/public/logos-escritorio/dc511d4f-bae3-4539-a6e3-d47c7822c7bf/logo_1788830218568.png" alt="Gomes &amp; Gonzaga Advocacia">
-    </a>
-    <nav class="main-nav" id="mainNav">
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#sobre">Sobre Nós</a></li>
-        <li><a href="#areas">Áreas de Atuação</a></li>
-        <li><a href="#diferenciais">Diferenciais</a></li>
-        <li><a href="#publicacoes">Publicações</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <a class="btn btn-gold" href="https://wa.me/5511925462929" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.02 2c-5.5 0-9.97 4.46-9.97 9.96 0 1.76.46 3.48 1.34 4.99L2 22l5.2-1.36a9.94 9.94 0 0 0 4.82 1.23h.01c5.5 0 9.97-4.46 9.97-9.96S17.52 2 12.02 2zm5.85 14.24c-.25.7-1.45 1.34-1.99 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.6-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.18-.32.4-.45.53-.15.15-.31.32-.13.62.18.3.8 1.32 1.72 2.14 1.18 1.06 2.18 1.39 2.48 1.55.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.13.08.72-.17 1.42z"/></svg>
-        <span class="btn-text">Fale Conosco</span>
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<section class="hero" id="home">
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="hero-logo">
-        <img src="https://szkknvtqptdeffknnllx.supabase.co/storage/v1/object/public/logos-escritorio/dc511d4f-bae3-4539-a6e3-d47c7822c7bf/logo_1788830218568.png" alt="Gomes &amp; Gonzaga Advocacia">
+<!-- ===== TELA DE LOGIN ===== -->
+<div id="tela-login">
+  <div class="login-box">
+    <div class="login-logo">CATFlow</div>
+    <div class="login-subtitle">Acesse sua conta</div>
+    <form id="form-login">
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" required autocomplete="username">
       </div>
-      <h1 class="hero-brand-name">Gomes &amp; Gonzaga</h1>
-      <div class="hero-brand-sub">
-        <span>Advocacia</span>
-        <div class="line"></div>
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" required autocomplete="current-password">
       </div>
-      <p class="hero-tagline">Direitos que você tem.<br>Proteção que você merece.</p>
-      <div class="hero-divider"></div>
-      <p class="hero-text">Atuamos com dedicação, ética e compromisso para garantir justiça e segurança jurídica a cada cliente.</p>
-      <a class="btn btn-gold" href="https://wa.me/5511925462929" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.02 2c-5.5 0-9.97 4.46-9.97 9.96 0 1.76.46 3.48 1.34 4.99L2 22l5.2-1.36a9.94 9.94 0 0 0 4.82 1.23h.01c5.5 0 9.97-4.46 9.97-9.96S17.52 2 12.02 2zm5.85 14.24c-.25.7-1.45 1.34-1.99 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.6-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.18-.32.4-.45.53-.15.15-.31.32-.13.62.18.3.8 1.32 1.72 2.14 1.18 1.06 2.18 1.39 2.48 1.55.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.13.08.72-.17 1.42z"/></svg>
-        Fale Conosco
-      </a>
-    </div>
-    <div class="hero-visual">
-      <img src="balanca.jpg" alt="Balança da justiça" class="hero-photo">
-    </div>
-  </div>
-</section>
-
-<section class="sobre" id="sobre">
-  <div class="container sobre-texto-wrap">
-    <p class="eyebrow">Sobre Nós</p>
-    <h2>Compromisso com pessoas.<br>Atuação com propósito.</h2>
-    <p class="sobre-texto">A Gomes &amp; Gonzaga Advocacia é pautada na confiança, na transparência e na busca constante pelos melhores resultados. Nosso objetivo é oferecer um atendimento humanizado e soluções jurídicas eficazes, sempre respeitando a individualidade de cada caso.</p>
-    <a class="btn btn-maroon" href="#contato">Conheça Mais</a>
-  </div>
-</section>
-
-<section class="diferenciais" id="diferenciais">
-  <div class="container">
-    <p class="eyebrow center"><span class="dash"></span>Diferenciais<span class="dash"></span></p>
-    <h2 class="diferenciais-titulo">O que nos diferencia</h2>
-    <div class="diferenciais-grid">
-      <div class="diferencial-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/><path d="m8.5 12 2.4 2.4L16 9.4"/></svg>
-        <h4>Ética</h4>
-        <p>Atuamos com integridade e responsabilidade em todas as nossas ações.</p>
-      </div>
-      <div class="diferencial-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="12" r="5.2"/><circle cx="15" cy="12" r="5.2"/></svg>
-        <h4>Compromisso</h4>
-        <p>Nos dedicamos de forma personalizada a cada cliente e causa.</p>
-      </div>
-      <div class="diferencial-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c1-3.8 4-6 7-6s6 2.2 7 6"/></svg>
-        <h4>Dedicação</h4>
-        <p>Trabalhamos com empenho e seriedade para alcançar os melhores resultados.</p>
-      </div>
-      <div class="diferencial-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="12" y1="3" x2="12" y2="19"/><line x1="4" y1="7" x2="20" y2="7"/><path d="M4 7 1.5 12a2.5 2.5 0 0 0 5 0Z"/><path d="M20 7l-2.5 5a2.5 2.5 0 0 0 5 0Z"/><line x1="8" y1="20" x2="16" y2="20"/></svg>
-        <h4>Justiça</h4>
-        <p>Defendemos seus direitos com estratégia, técnica e sensibilidade.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="areas" id="areas">
-  <div class="container">
-    <p class="eyebrow center"><span class="dash"></span>Áreas de Atuação<span class="dash"></span></p>
-    <h2>Soluções jurídicas para diversas necessidades</h2>
-    <div class="areas-grid">
-      <div class="area-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="13" x2="21" y2="13"/></svg>
-        <h3>Trabalhista</h3>
-        <p>Defesa dos direitos de trabalhadores e empresas com segurança e estratégia.</p>
-      </div>
-      <div class="area-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.6"/><path d="M2.5 20c.7-3.6 3-5.6 5.5-5.6s4.8 2 5.5 5.6"/><path d="M14.5 20c.5-2.7 2-4.3 3.9-4.3s3.4 1.6 3.9 4.3"/></svg>
-        <h3>Família</h3>
-        <p>Soluções sensíveis e eficazes para questões familiares e sucessões.</p>
-      </div>
-      <div class="area-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="4" y1="21" x2="20" y2="21"/><line x1="5" y1="21" x2="5" y2="10"/><line x1="19" y1="21" x2="19" y2="10"/><path d="M4 10 12 4l8 6"/><line x1="9" y1="21" x2="9" y2="13"/><line x1="15" y1="21" x2="15" y2="13"/></svg>
-        <h3>Cível e Consumidor</h3>
-        <p>Atuação completa em causas cíveis e na defesa do consumidor.</p>
-      </div>
-      <div class="area-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="3"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="M4 21a8 8 0 0 1 3-6.2M20 21a8 8 0 0 0-3-6.2"/></svg>
-        <h3>Previdenciário</h3>
-        <p>Apoio e orientação para benefícios do INSS e direitos previdenciários.</p>
-      </div>
-      <div class="area-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12 6.5 20.5a1.5 1.5 0 0 1-2-2L13 10"/><path d="m17.5 4.5 3 3-3 3-5.5-5.5L15 2Z"/><line x1="14" y1="6" x2="18" y2="10"/></svg>
-        <h3>Criminal</h3>
-        <p>Defesa técnica e humanizada em todas as fases do processo penal.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="publicacoes" id="publicacoes">
-  <div class="container">
-    <p class="eyebrow center"><span class="dash"></span>Publicações<span class="dash"></span></p>
-    <h2 class="publicacoes-titulo">Notícias e novidades</h2>
-    <div id="publicacoes-lista" class="publicacoes-grid">
-      <p class="publicacoes-vazio">Carregando publicações...</p>
-    </div>
-  </div>
-</section>
-
-<!-- MODAL — publicação completa -->
-<div class="modal-publicacao" id="modalPublicacao">
-  <div class="modal-publicacao-fundo" id="modalPublicacaoFundo"></div>
-  <div class="modal-publicacao-caixa">
-    <button class="modal-publicacao-fechar" id="modalPublicacaoFechar" aria-label="Fechar">&times;</button>
-    <div id="modalPublicacaoImagemWrap"></div>
-    <span class="modal-publicacao-badge" id="modalPublicacaoBadge"></span>
-    <h3 id="modalPublicacaoTitulo"></h3>
-    <div class="modal-publicacao-texto" id="modalPublicacaoTexto"></div>
+      <button type="submit" class="btn-entrar" id="btn-entrar">Entrar</button>
+      <div class="msg-erro" id="msg-erro"></div>
+    </form>
   </div>
 </div>
 
-<section class="contato" id="contato">
-  <div class="container contato-grid-novo">
-    <div class="contato-info">
-      <p class="eyebrow">Entre em Contato</p>
-      <h2>Fale com Nossa Equipe</h2>
-      <p class="contato-texto">Agende uma consulta ou tire suas dúvidas. Respondemos em até 24 horas.</p>
-
-      <div class="contato-item">
-        <div class="contato-icone">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.02 2c-5.5 0-9.97 4.46-9.97 9.96 0 1.76.46 3.48 1.34 4.99L2 22l5.2-1.36a9.94 9.94 0 0 0 4.82 1.23h.01c5.5 0 9.97-4.46 9.97-9.96S17.52 2 12.02 2zm5.85 14.24c-.25.7-1.45 1.34-1.99 1.42-.51.08-1.15.11-1.86-.12-.43-.13-.98-.32-1.68-.62-2.96-1.28-4.89-4.26-5.04-4.46-.15-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.16 1.03-2.46.27-.3.6-.37.79-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.18-.32.4-.45.53-.15.15-.31.32-.13.62.18.3.8 1.32 1.72 2.14 1.18 1.06 2.18 1.39 2.48 1.55.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.13.08.72-.17 1.42z"/></svg>
-        </div>
-        <div>
-          <h5>Telefone / WhatsApp</h5>
-          <p>(11) 92546-2929</p>
-        </div>
-      </div>
-      <div class="contato-item">
-        <div class="contato-icone">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-        </div>
-        <div>
-          <h5>E-mail</h5>
-          <p>contato@ggaadvocacia.com.br</p>
-        </div>
-      </div>
-      <div class="contato-item">
-        <div class="contato-icone">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.4-7-11.5A7 7 0 0 1 19 9.5C19 14.6 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
-        </div>
-        <div>
-          <h5>Endereço</h5>
-          <p>Av. Itaquera, 3699, sala 03 — Cidade Líder, São Paulo/SP</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="contato-form">
-      <h3>Envie sua Mensagem</h3>
-      <form id="contactForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nome">Nome *</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
-          </div>
-          <div class="form-group">
-            <label for="telefone">Telefone</label>
-            <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999">
-          </div>
-        </div>
-        <div class="form-group full">
-          <label for="email">E-mail *</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com" required>
-        </div>
-        <div class="form-group full">
-          <label for="area">Área de Interesse *</label>
-          <select id="area" name="area" required>
-            <option value="">Selecione...</option>
-            <option value="trabalhista">Trabalhista</option>
-            <option value="familia">Família</option>
-            <option value="civel">Cível e Consumidor</option>
-            <option value="previdenciario">Previdenciário</option>
-            <option value="outro">Outro assunto</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label for="mensagem">Mensagem *</label>
-          <textarea id="mensagem" name="mensagem" placeholder="Descreva brevemente sua necessidade..." required></textarea>
-        </div>
-        <button type="submit" class="btn-submit">Enviar Mensagem →</button>
-      </form>
-      <div class="form-success" id="formSuccess">✅ Redirecionando para o WhatsApp da Gomes &amp; Gonzaga...</div>
+<!-- ===== APP ===== -->
+<div id="app">
+  <div class="topbar">
+    <div class="marca">CATFlow</div>
+    <div class="usuario-info">
+      <select id="seletor-tenant" style="display:none;"></select>
+      <span id="info-nome"></span>
+      <span class="badge-papel" id="info-papel"></span>
+      <button class="btn-sair" id="btn-notificacoes" style="background:transparent; border:1px solid #fff; color:#fff;" title="Ativar notificações">🔔</button>
+      <button class="btn-sair" id="btn-sair">Sair</button>
     </div>
   </div>
-</section>
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <img src="https://szkknvtqptdeffknnllx.supabase.co/storage/v1/object/public/logos-escritorio/dc511d4f-bae3-4539-a6e3-d47c7822c7bf/logo_1788830218568.png" alt="Gomes &amp; Gonzaga Advocacia" class="footer-logo">
-        <p>Direitos que você tem. Proteção que você merece.</p>
-      </div>
-      <div>
-        <h5>Contato</h5>
-        <ul>
-          <li>Tel/WhatsApp: (11) 92546-2929</li>
-          <li>contato@ggaadvocacia.com.br</li>
-          <li>Av. Itaquera, 3699 — Cidade Líder, SP</li>
-        </ul>
-      </div>
-      <div>
-        <h5>Links Rápidos</h5>
-        <ul>
-          <li><a href="#sobre">Sobre Nós</a></li>
-          <li><a href="#areas">Áreas de Atuação</a></li>
-          <li><a href="#diferenciais">Diferenciais</a></li>
-          <li><a href="#publicacoes">Publicações</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Siga-nos</h5>
-        <div class="socials">
-          <a href="#" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
-          </a>
-          <a href="#" target="_blank" rel="noopener" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+
+    <div class="conteudo">
+
+      <!-- HOME -->
+      <div class="view ativa" id="view-home">
+        <h1>Bem-vindo(a)</h1>
+        <div class="sub">Painel inicial do CATFlow.</div>
+        <div class="card-info">
+          <p><strong>Nome:</strong> <span id="detalhe-nome"></span></p>
+          <p><strong>Papel:</strong> <span id="detalhe-papel"></span></p>
+          <p><strong>Empresa (tenant):</strong> <span id="detalhe-tenant"></span></p>
+        </div>
+
+        <div id="home-painel-admin" style="display:none; margin-top:24px;">
+          <div class="resumo-grid" id="home-resumo"></div>
+          <div class="painel">
+            <h2>Por Analista</h2>
+            <div class="tabela-wrap">
+              <table>
+                <thead><tr><th>Analista</th><th>Leads recebidos</th><th>Em andamento</th><th>Fechados</th><th>Sem contato</th></tr></thead>
+                <tbody id="home-tabela-analistas"><tr><td colspan="5" class="vazio">Carregando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Gomes &amp; Gonzaga Advocacia. Todos os direitos reservados.</span>
-      <span>Ética · Compromisso · Dedicação · Justiça</span>
+
+      <!-- TRATAMENTO DE BASE -->
+      <div class="view" id="view-tratamento">
+        <h1>Tratamento de Base</h1>
+        <div class="sub">Importe o arquivo (.csv ou .xlsx) já higienizado. O sistema separa automaticamente quem tem direito e quem não tem, sem duplicar CPF já existente.</div>
+
+        <div class="painel">
+          <h2>Novo lote</h2>
+          <div class="linha-form">
+            <div class="campo">
+              <label>Nome do lote</label>
+              <input type="text" id="tb-nome-lote" placeholder="Ex: lote001">
+            </div>
+            <div class="campo">
+              <label>Arquivo (.csv ou .xlsx)</label>
+              <input type="file" id="tb-arquivo" accept=".csv,.xlsx,.xls">
+            </div>
+            <div class="campo" style="max-width:160px;">
+              <label>Tamanho de cada sublote</label>
+              <input type="number" id="tb-tamanho-sublote" value="1000" min="1">
+            </div>
+            <button class="btn" id="tb-btn-processar">Processar e Importar</button>
+          </div>
+          <div id="tb-split-wrap" style="display:none; margin-top:16px;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; cursor:pointer;">
+              <input type="checkbox" id="tb-check-dividir"> Dividir este lote entre mais de um cliente
+            </label>
+            <div id="tb-split-tenants" style="display:none; margin-top:10px;"></div>
+          </div>
+          <div id="tb-status" style="margin-top:14px; font-size:13px;"></div>
+        </div>
+
+        <div class="painel">
+          <h2>Lotes já importados</h2>
+          <div class="tabela-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>Quantidade</th><th>Status</th><th>Importado em</th></tr></thead>
+              <tbody id="tb-tabela-lotes"><tr><td colspan="4" class="vazio">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISTRIBUIÇÃO -->
+      <div class="view" id="view-distribuicao">
+        <h1>Distribuição</h1>
+        <div class="sub">Leads elegíveis, ainda não distribuídos. Selecione e escolha o analista.</div>
+
+        <div class="painel">
+          <div class="linha-form" style="margin-bottom:14px;">
+            <div class="campo" style="max-width:220px;">
+              <label>Filtrar por lote</label>
+              <select id="dist-select-lote"><option value="">Todos os lotes</option></select>
+            </div>
+            <div class="campo" style="max-width:280px;">
+              <label>Distribuir selecionados para</label>
+              <select id="dist-select-analista"><option value="">Selecione o analista...</option></select>
+            </div>
+            <button class="btn" id="dist-btn-distribuir">Distribuir selecionados</button>
+            <button class="btn btn-secundario" id="dist-btn-recarregar">Recarregar</button>
+          </div>
+          <div id="dist-status" style="font-size:13px; margin-bottom:10px;"></div>
+          <div class="tabela-wrap">
+            <table>
+              <thead><tr><th><input type="checkbox" id="dist-check-todos"></th><th>Nome</th><th>CPF</th><th>Telefone</th><th>CID</th></tr></thead>
+              <tbody id="dist-tabela"><tr><td colspan="5" class="vazio">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEUS LEADS -->
+      <div class="view" id="view-meusleads">
+        <h1>Meus Leads</h1>
+        <div class="sub">Leads distribuídos a você (ou, se Admin/Master, do tenant inteiro).</div>
+
+        <div class="resumo-grid" id="ml-resumo"></div>
+
+        <div class="ml-layout">
+          <div class="ml-detalhe painel" id="ml-detalhe">
+            <div class="vazio">Selecione um lead na lista à direita pra ver os detalhes.</div>
+          </div>
+          <div class="ml-lista painel">
+            <input type="text" id="ml-busca" placeholder="Buscar por nome ou CPF..." style="width:100%; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:13px; margin-bottom:10px;">
+            <div id="ml-pendentes-titulo" style="font-size:13px; font-weight:700; color:var(--text-secondary); margin-bottom:8px;">Pendentes</div>
+            <div id="ml-lista-itens" style="max-height:600px; overflow-y:auto;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRÁFEGO PAGO -->
+      <div class="view" id="view-trafegopago">
+        <h1>Tráfego Pago</h1>
+        <div class="sub">Leads que saíram do pool (3 tentativas sem contato, número inválido ou WhatsApp inexistente).</div>
+
+        <div class="painel">
+          <div class="resumo-grid" id="tp-resumo"></div>
+          <div style="margin-bottom:12px;">
+            <button class="btn btn-secundario btn-sm" id="tp-btn-exportar">Exportar CSV</button>
+          </div>
+          <div class="tabela-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>Motivo</th><th>Liberado em</th><th>Apaga em</th></tr></thead>
+              <tbody id="tp-tabela"><tr><td colspan="6" class="vazio">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- USUÁRIOS -->
+      <div class="view" id="view-usuarios">
+        <h1 id="us-titulo">Usuários</h1>
+        <div class="sub" id="us-subtitulo">Criar login de Analista. E-mail e senha são gerados automaticamente.</div>
+
+        <div class="painel">
+          <h2 id="us-form-titulo">Novo Analista</h2>
+          <div class="linha-form">
+            <div class="campo" id="us-campo-papel" style="display:none; max-width:160px;">
+              <label>Tipo</label>
+              <select id="us-papel">
+                <option value="analista">Analista</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Nome completo</label>
+              <input type="text" id="us-nome" placeholder="Ex: João Silva">
+            </div>
+            <button class="btn" id="us-btn-criar">Criar login</button>
+          </div>
+          <div id="us-status" style="margin-top:14px; font-size:13px;"></div>
+          <div id="us-credenciais" style="display:none; margin-top:14px; background:#fff; border:1px solid var(--success); border-radius:8px; padding:14px;">
+            <p style="margin:0 0 6px 0; font-size:13px; color:var(--success); font-weight:700;">Login criado — copie e envie pra pessoa (essa senha não aparece de novo):</p>
+            <p style="margin:2px 0; font-size:13px;"><strong>E-mail:</strong> <span id="us-cred-email"></span></p>
+            <p style="margin:2px 0; font-size:13px;"><strong>Senha:</strong> <span id="us-cred-senha"></span></p>
+          </div>
+        </div>
+
+        <div class="painel">
+          <h2>Usuários já criados</h2>
+          <div id="us-aviso-email" class="aviso-box" style="display:none;"></div>
+          <div class="tabela-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>E-mail</th><th>Papel</th><th>Ativo</th><th>Criado em</th><th>Ações</th></tr></thead>
+              <tbody id="us-tabela"><tr><td colspan="6" class="vazio">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PUBLICAÇÕES (notícias/posts do site público) -->
+      <div class="view" id="view-publicacoes">
+        <h1>Publicações</h1>
+        <div class="sub">Notícias e avisos que aparecem no site público do escritório. Some do site quando você desmarcar "Publicado" — não precisa apagar.</div>
+
+        <div class="painel">
+          <h2 id="pub-form-titulo">Nova publicação</h2>
+          <input type="hidden" id="pub-id-editando">
+          <div class="campo" style="margin-bottom:12px;">
+            <label>Título</label>
+            <input type="text" id="pub-titulo" placeholder="Ex: TST torna obrigatória indenização no limbo previdenciário">
+          </div>
+          <div class="linha-form">
+            <div class="campo" style="max-width:220px;">
+              <label>Selo (badge)</label>
+              <input type="text" id="pub-badge" value="Notícia">
+            </div>
+            <div class="campo">
+              <label>Imagem (opcional)</label>
+              <input type="file" id="pub-imagem" accept="image/*">
+              <div id="pub-imagem-colar" tabindex="0" style="margin-top:8px; padding:10px 12px; border:1px dashed var(--border); border-radius:8px; font-size:12px; color:var(--text-secondary); cursor:text; outline:none;">
+                📋 Ou clica aqui e cola (Ctrl+V) uma imagem copiada de qualquer lugar
+              </div>
+              <div id="pub-imagem-preview-wrap" style="display:none; margin-top:10px;">
+                <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">Prévia de como vai aparecer no site:</div>
+                <div style="width:220px; aspect-ratio:4/3; border-radius:8px; overflow:hidden; border:1px solid var(--border);">
+                  <img id="pub-imagem-preview" style="width:100%; height:100%; object-fit:cover; display:block;">
+                </div>
+                <button type="button" class="btn btn-secundario btn-sm" id="pub-btn-remover-imagem" style="margin-top:8px; color:var(--danger);">✕ Remover imagem</button>
+              </div>
+            </div>
+          </div>
+          <div class="campo" style="margin-top:12px;">
+            <label>Texto completo</label>
+            <textarea id="pub-conteudo" style="width:100%; min-height:140px; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit;" placeholder="O texto completo que aparece quando alguém clica na publicação..."></textarea>
+          </div>
+          <label style="display:flex; align-items:center; gap:8px; margin-top:12px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="pub-publicado" checked> Publicado (visível no site agora)
+          </label>
+          <div style="margin-top:14px; display:flex; gap:10px;">
+            <button class="btn" id="pub-btn-salvar">Salvar publicação</button>
+            <button class="btn btn-secundario" id="pub-btn-cancelar" style="display:none;">Cancelar edição</button>
+          </div>
+          <div id="pub-status" style="margin-top:12px; font-size:13px;"></div>
+        </div>
+
+        <div class="painel">
+          <h2>Publicações já criadas</h2>
+          <div id="pub-lista"><div class="vazio">Carregando...</div></div>
+        </div>
+      </div>
+
+      <!-- CONFIGURAÇÕES (dados do contrato/escritório por tenant) -->
+      <div class="view" id="view-configuracoes">
+        <h1>Configurações</h1>
+        <div class="sub">Dados do escritório usados na geração de Contrato, Procurações e outros documentos deste cliente.</div>
+
+        <div class="painel">
+          <h2>Escritório</h2>
+          <div class="linha-form">
+            <div class="campo"><label>Nome completo (razão social)</label><input type="text" id="cf-nome-escritorio"></div>
+            <div class="campo"><label>OAB do escritório</label><input type="text" id="cf-oab-escritorio" placeholder="Ex: OAB/SP nº 14.616"></div>
+          </div>
+          <div class="linha-form" style="margin-top:12px;">
+            <div class="campo"><label>CNPJ</label><input type="text" id="cf-cnpj"></div>
+            <div class="campo"><label>Telefone</label><input type="text" id="cf-telefone"></div>
+            <div class="campo"><label>E-mail</label><input type="text" id="cf-email"></div>
+          </div>
+          <div class="campo" style="margin-top:12px;"><label>Endereço completo</label><input type="text" id="cf-endereco"></div>
+        </div>
+
+        <div class="painel">
+          <h2>Advogado(a) responsável</h2>
+          <div class="linha-form">
+            <div class="campo"><label>Nome civil completo</label><input type="text" id="cf-nome-advogado"></div>
+            <div class="campo"><label>Cidade de assinatura</label><input type="text" id="cf-cidade-assinatura"></div>
+          </div>
+          <div class="campo" style="margin-top:12px;">
+            <label>Qualificação + OAB pessoal</label>
+            <input type="text" id="cf-qualificacao-advogado" placeholder="Ex: brasileira, casada, advogada, inscrita na OAB/SP sob o nº XXX.XXX">
+          </div>
+        </div>
+
+        <div class="painel">
+          <h2>Envio de e-mail (Resend)</h2>
+          <div class="linha-form">
+            <div class="campo">
+              <label>Resend API Key</label>
+              <input type="text" id="cf-resend-key" placeholder="Ex: re_xxxxxxxxxxxxxxxx">
+            </div>
+            <div class="campo">
+              <label>E-mail remetente (domínio verificado no Resend)</label>
+              <input type="text" id="cf-email-remetente" placeholder="Ex: documentos@ggaadvocacia.com.br">
+            </div>
+          </div>
+        </div>
+
+        <div class="painel">
+          <h2>Assinatura eletrônica (ZapSign)</h2>
+          <div class="campo">
+            <label>Token da API do ZapSign (conta deste cliente)</label>
+            <input type="text" id="cf-zapsign-token" placeholder="Ex: c7f35c84-7893-4087-b4fb-d1f06c23">
+          </div>
+        </div>
+
+        <div class="painel">
+          <h2>Cláusula de honorários (Cláusula 4ª do contrato)</h2>
+          <textarea id="cf-clausula-honorarios" style="width:100%; min-height:90px; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit;"></textarea>
+        </div>
+
+        <div class="painel">
+          <h2>Logo</h2>
+          <div id="cf-logo-preview" style="margin-bottom:10px;"></div>
+          <input type="file" id="cf-logo-arquivo" accept="image/png,image/jpeg">
+          <div class="campo" style="max-width:200px; margin-top:10px;">
+            <label>Alinhamento no cabeçalho</label>
+            <select id="cf-logo-alinhamento">
+              <option value="centro">Centralizado</option>
+              <option value="direita">Direita</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn" id="cf-btn-salvar">Salvar configurações</button>
+        <div id="cf-status" style="margin-top:12px; font-size:13px;"></div>
+      </div>
+
+      <!-- DOCUMENTOS (pasta por lead) -->
+      <div class="view" id="view-documentos">
+        <h1>Documentos</h1>
+        <div class="sub">Acompanhamento de documentos enviados por cada cliente. Gere o link na tela "Meus Leads" quando o caso estiver pronto pra pedir documentos.</div>
+
+        <div class="painel">
+          <div class="linha-form" style="margin-bottom:14px;">
+            <div class="campo" style="max-width:280px;">
+              <label>Buscar por nome ou CPF</label>
+              <input type="text" id="doc-busca" placeholder="Digite pra filtrar...">
+            </div>
+          </div>
+          <div class="tabela-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>CPF</th><th>Progresso</th><th>Criado em</th><th>Ações</th></tr></thead>
+              <tbody id="doc-tabela"><tr><td colspan="5" class="vazio">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-</footer>
+</div>
 
-<script src="script.js"></script>
+<!-- MODAL — geração de documento (Ficha / Capa / Contrato / Relatório) -->
+<div id="modal-gerar-doc" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:12px; padding:24px; max-width:640px; width:92%; max-height:85vh; overflow-y:auto;">
+    <h2 id="modal-gerar-doc-titulo" style="margin:0 0 16px 0; font-size:17px;">Documento</h2>
+    <div id="modal-gerar-doc-campos" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+    <div id="modal-gerar-doc-status" style="margin-top:12px; font-size:13px;"></div>
+    <div style="margin-top:18px; display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-secundario" id="modal-gerar-doc-cancelar">Cancelar</button>
+      <button class="btn" id="modal-gerar-doc-confirmar">Salvar e gerar PDF</button>
+    </div>
+  </div>
+</div>
+<style>
+  #modal-gerar-doc-campos .modal-field label { display:block; font-size:12px; font-weight:600; margin-bottom:4px; color:var(--text-secondary); }
+  #modal-gerar-doc-campos .modal-field input, #modal-gerar-doc-campos .modal-field select, #modal-gerar-doc-campos .modal-field textarea {
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:6px; font-size:13px; font-family:inherit;
+  }
+  #modal-gerar-doc-campos .modal-field textarea { min-height:60px; resize:vertical; }
+</style>
+
+<!-- MODAL — visualizar pasta de documentos -->
+<div id="modal-ver-pasta" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:12px; padding:24px; max-width:560px; width:92%; max-height:85vh; overflow-y:auto;">
+    <h2 id="vp-titulo" style="margin:0 0 6px 0; font-size:17px;">Documentos</h2>
+    <div id="vp-link" style="font-size:12px; color:var(--text-secondary); margin-bottom:14px; word-break:break-all;"></div>
+    <div id="vp-lista"></div>
+    <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:8px;">
+      <button class="btn btn-secundario" id="vp-chat">💬 Chat</button>
+      <button class="btn btn-secundario" id="vp-fechar">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL — chat da pasta -->
+<div id="modal-chat-pasta" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:110; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:12px; padding:20px; max-width:480px; width:92%; height:78vh; display:flex; flex-direction:column;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h2 id="chat-titulo" style="margin:0; font-size:16px;">Chat</h2>
+      <button class="btn btn-secundario" id="chat-fechar" style="padding:4px 10px;">Fechar</button>
+    </div>
+    <div id="chat-mensagens" style="flex:1; overflow-y:auto; border:1px solid var(--border); border-radius:8px; padding:10px; background:#FAFAFA; display:flex; flex-direction:column; gap:8px;"></div>
+    <div id="chat-gravando-aviso" style="display:none; font-size:12px; color:var(--brand); margin-top:6px;">🔴 Gravando áudio...</div>
+    <div style="display:flex; gap:6px; margin-top:10px; align-items:center;">
+      <input type="text" id="chat-input-texto" placeholder="Digite uma mensagem..." style="flex:1; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:13px;">
+      <button class="btn btn-secundario" id="chat-btn-anexo" title="Anexar arquivo" style="padding:8px 10px;">📎</button>
+      <input type="file" id="chat-input-arquivo" style="display:none;">
+      <button class="btn btn-secundario" id="chat-btn-audio" title="Gravar áudio" style="padding:8px 10px;">🎤</button>
+      <button class="btn" id="chat-btn-enviar" style="padding:8px 14px;">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>
+// =====================================================
+// CONFIGURAÇÃO
+// =====================================================
+const SUPABASE_URL = 'https://szkknvtqptdeffknnllx.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_nw_LqaqXO9gcF8ybA3vrVg_qtYfATdE';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Palavras-chave de elegibilidade ao Auxílio-Acidente (mesma lista usada na Praty),
+// comparadas sem acento/maiúscula contra CID + Parte do Corpo + Natureza da Lesão juntos.
+const PALAVRAS_CHAVE_ELEGIVEL = [
+  // Membros Superiores
+  'amputacao de dedos','amputacao de mao','fratura de punho','fratura de radio','fratura de ulna',
+  'fratura de umero','fratura de clavicula','fratura de dedo','lesao de manguito rotador',
+  'luxacao recorrente de ombro','epicondilite','tenossinovite de de quervain',
+  'sindrome do tunel do carpo','lesao de nervos','lesao ulnar','lesao mediano','lesao radial',
+  'rigidez de cotovelo','rigidez de punho',
+  // Membros Inferiores
+  'fratura de femur','fratura de tibia','fratura de fibula','fratura de tornozelo',
+  'fratura do pe','fratura de calcaneo','fratura de patela','lesao de joelho','lca','lcp',
+  'menisco','artrose pos-traumatica','artrose pos traumatica','encurtamento de membro',
+  'amputacao de dedos do pe','amputacao parcial do pe','amputacao total do pe',
+  'lesao de quadril','fratura de bacia','ruptura do tendao de aquiles',
+  // Coluna
+  'hernia de disco','fratura de vertebras','artrodese da coluna',
+  'limitacao permanente de mobilidade','dor cronica',
+  // Cabeça e Face
+  'perda parcial da visao','perda parcial da audicao','fraturas faciais','paralisia facial',
+  'traumatismo craniano',
+  // Mãos
+  'perda de forca','rigidez dos dedos','diminuicao da pinca',
+  'dificuldade para segurar ferramentas','lesoes tendinosas',
+  // Nervos
+  'lesao do plexo braquial','neuropatia traumatica','perda de sensibilidade','paralisias parciais',
+  // Queimaduras
+  'cicatrizes retrateis','limitacao de movimento','perda funcional',
+  // Lesões Musculares
+  'ruptura muscular','ruptura de tendoes','perda permanente de forca',
+  // Acidentes com Máquinas
+  'esmagamento','amputacoes','perda de mobilidade','rigidez articular',
+  // Exemplos comuns na prática
+  'joelho operado','colocacao de placas e parafusos','amputacao de qualquer dedo',
+  'fratura consolidada torta','limitacao para agachar','limitacao para correr',
+  'limitacao para subir escadas','diminuicao de forca na mao','dificuldade para carregar peso',
+  'limitacao para dirigir','limitacao para operar maquinas','claudicacao',
+  // Doenças ocupacionais
+  'lesao por esforco repetitivo','ler','dort',
+  'disturbios osteomusculares relacionados ao trabalho','tenossinovite','bursite',
+  'lesoes de ombro por esforco repetitivo'
+];
+
+let usuarioAtual = null;   // {id, nome, papel, tenant_id, tenantNome}
+let meusLeadsAtuais = [];  // cache da tela Meus Leads (lista completa carregada)
+let leadSelecionadoId = null; // qual lead está aberto no painel de detalhe
+let tenantEfetivo = null;  // tenant_id usado nas queries (fixo, ou escolhido pelo Master)
+let todosOsTenants = [];
+let tenantsInfo = {}; // { [tenant_id]: {nome, numero_whatsapp} } — usado pro lembrete de qual WhatsApp usar
+
+const telaLogin = document.getElementById('tela-login');
+const app = document.getElementById('app');
+const formLogin = document.getElementById('form-login');
+const btnEntrar = document.getElementById('btn-entrar');
+const msgErro = document.getElementById('msg-erro');
+const btnSair = document.getElementById('btn-sair');
+const seletorTenant = document.getElementById('seletor-tenant');
+const sidebar = document.getElementById('sidebar');
+
+// =====================================================
+// NOTIFICAÇÃO PUSH (avisa o analista mesmo com o CATFlow fechado)
+// =====================================================
+const VAPID_PUBLIC_KEY = 'BL5IctJwdISeiDAG6MgPl7sBVl_ova0Lg04j2mJx75q4oumB3mc6sHn0K-IjNInxFv10rEm40ucWogR7kDFkp4s';
+
+function base64UrlParaUint8Array(base64Url) {
+  const padding = '='.repeat((4 - (base64Url.length % 4)) % 4);
+  const base64 = (base64Url + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const bruto = atob(base64);
+  const saida = new Uint8Array(bruto.length);
+  for (let i = 0; i < bruto.length; i++) saida[i] = bruto.charCodeAt(i);
+  return saida;
+}
+
+async function atualizarBotaoNotificacoes() {
+  const botao = document.getElementById('btn-notificacoes');
+  if (!('Notification' in window)) { botao.style.display = 'none'; return; }
+  if (Notification.permission === 'granted') {
+    botao.textContent = '🔔';
+    botao.title = 'Notificações ativadas';
+  } else {
+    botao.textContent = '🔕';
+    botao.title = 'Ativar notificações';
+  }
+}
+
+async function ativarNotificacoes() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    alert('Seu navegador não suporta notificações push.');
+    return;
+  }
+  try {
+    const permissao = await Notification.requestPermission();
+    if (permissao !== 'granted') { await atualizarBotaoNotificacoes(); return; }
+
+    const registro = await navigator.serviceWorker.register('/sw.js');
+    await navigator.serviceWorker.ready;
+
+    let inscricao = await registro.pushManager.getSubscription();
+    if (!inscricao) {
+      inscricao = await registro.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: base64UrlParaUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+
+    const dadosInscricao = inscricao.toJSON();
+    const { error } = await supabaseClient.from('push_inscricoes').upsert({
+      usuario_id: usuarioAtual.id,
+      endpoint: dadosInscricao.endpoint,
+      chave_p256dh: dadosInscricao.keys.p256dh,
+      chave_auth: dadosInscricao.keys.auth
+    }, { onConflict: 'endpoint' });
+
+    if (error) { alert('Erro ao salvar inscrição: ' + error.message); return; }
+    await atualizarBotaoNotificacoes();
+  } catch (e) {
+    alert('Não foi possível ativar as notificações: ' + e.message);
+  }
+}
+
+document.getElementById('btn-notificacoes').addEventListener('click', ativarNotificacoes);
+
+function traduzirErro(mensagem) {
+  if (mensagem.includes('Invalid login credentials')) return 'E-mail ou senha incorretos.';
+  if (mensagem.includes('Email not confirmed')) return 'E-mail ainda não confirmado.';
+  return 'Não foi possível entrar. Tente novamente.';
+}
+
+// =====================================================
+// LOGIN / SESSÃO
+// =====================================================
+async function carregarPainel(usuario) {
+  const { data: perfil, error } = await supabaseClient
+    .from('usuarios_perfil')
+    .select('nome, papel, tenant_id, ativo, tenants(nome)')
+    .eq('id', usuario.id)
+    .single();
+
+  if (error || !perfil) {
+    msgErro.textContent = 'Login feito, mas seu usuário ainda não foi cadastrado em usuarios_perfil. Fale com o Master.';
+    msgErro.style.display = 'block';
+    await supabaseClient.auth.signOut();
+    return;
+  }
+
+  if (!perfil.ativo) {
+    msgErro.textContent = 'Seu acesso está inativo. Fale com o Admin ou Master.';
+    msgErro.style.display = 'block';
+    await supabaseClient.auth.signOut();
+    return;
+  }
+
+  usuarioAtual = {
+    id: usuario.id,
+    nome: perfil.nome,
+    papel: perfil.papel,
+    tenant_id: perfil.tenant_id,
+    tenantNome: perfil.tenants ? perfil.tenants.nome : null
+  };
+
+  document.getElementById('info-nome').textContent = usuarioAtual.nome;
+  document.getElementById('info-papel').textContent = usuarioAtual.papel;
+  document.getElementById('detalhe-nome').textContent = usuarioAtual.nome;
+  document.getElementById('detalhe-papel').textContent = usuarioAtual.papel;
+  document.getElementById('detalhe-tenant').textContent = usuarioAtual.tenantNome || 'Todos os clientes (Master)';
+  atualizarBotaoNotificacoes();
+
+  if (usuarioAtual.papel === 'master') {
+    const { data: tenants } = await supabaseClient.from('tenants').select('id, nome, numero_whatsapp').eq('ativo', true);
+    todosOsTenants = tenants || [];
+    seletorTenant.innerHTML = todosOsTenants.map(t => '<option value="'+t.id+'">'+t.nome+'</option>').join('');
+    seletorTenant.style.display = 'inline-block';
+    tenantEfetivo = todosOsTenants.length ? todosOsTenants[0].id : null;
+    seletorTenant.addEventListener('change', () => {
+      tenantEfetivo = seletorTenant.value;
+      recarregarViewAtual();
+    });
+  } else {
+    tenantEfetivo = usuarioAtual.tenant_id;
+    seletorTenant.style.display = 'none';
+  }
+
+  // Monta o mapa de tenants -> número de WhatsApp (RLS já filtra: Master vê todos, Admin/Analista só o próprio)
+  const { data: tenantsComNumero } = await supabaseClient.from('tenants').select('id, nome, numero_whatsapp');
+  tenantsInfo = {};
+  (tenantsComNumero || []).forEach(t => { tenantsInfo[t.id] = { nome: t.nome, numero_whatsapp: t.numero_whatsapp }; });
+
+  montarSidebar();
+  telaLogin.style.display = 'none';
+  app.style.display = 'block';
+  navegar('home');
+}
+
+formLogin.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  msgErro.style.display = 'none';
+  btnEntrar.disabled = true;
+  btnEntrar.textContent = 'Entrando...';
+
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value;
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
+
+  btnEntrar.disabled = false;
+  btnEntrar.textContent = 'Entrar';
+
+  if (error) {
+    msgErro.textContent = traduzirErro(error.message);
+    msgErro.style.display = 'block';
+    return;
+  }
+  await carregarPainel(data.user);
+});
+
+btnSair.addEventListener('click', async () => {
+  await supabaseClient.auth.signOut();
+  app.style.display = 'none';
+  telaLogin.style.display = 'flex';
+  formLogin.reset();
+  usuarioAtual = null;
+});
+
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) await carregarPainel(session.user);
+})();
+
+// =====================================================
+// NAVEGAÇÃO
+// =====================================================
+const MENU = [
+  { id: 'home', label: 'Início', papeis: ['master','admin','analista'] },
+  { id: 'tratamento', label: 'Tratamento de Base', papeis: ['master','admin'] },
+  { id: 'distribuicao', label: 'Distribuição', papeis: ['master','admin'] },
+  { id: 'meusleads', label: 'Meus Leads', papeis: ['master','admin','analista'] },
+  { id: 'trafegopago', label: 'Tráfego Pago', papeis: ['master','admin'] },
+  { id: 'usuarios', label: 'Usuários', papeis: ['master','admin'] },
+  { id: 'publicacoes', label: 'Publicações', papeis: ['master','admin'] },
+  { id: 'configuracoes', label: 'Configurações', papeis: ['master','admin'] },
+  { id: 'documentos', label: 'Documentos', papeis: ['master','admin','analista'] }
+];
+
+function montarSidebar() {
+  const itens = MENU.filter(m => m.papeis.includes(usuarioAtual.papel));
+  sidebar.innerHTML = itens.map(m =>
+    '<button data-view="'+m.id+'" onclick="navegar(\''+m.id+'\')">'+m.label+'</button>'
+  ).join('');
+}
+
+let viewAtualId = 'home';
+
+function navegar(viewId) {
+  // Sai da view atual: desliga qualquer Realtime que estava ligado nela
+  if (viewAtualId === 'documentos' && viewId !== 'documentos' && canalRealtimeDocumentosLista) {
+    supabaseClient.removeChannel(canalRealtimeDocumentosLista); canalRealtimeDocumentosLista = null;
+  }
+  if (viewAtualId === 'home' && viewId !== 'home' && canalRealtimeHome) {
+    supabaseClient.removeChannel(canalRealtimeHome); canalRealtimeHome = null;
+  }
+  if (viewAtualId === 'meusleads' && viewId !== 'meusleads' && canalRealtimeMeusLeads) {
+    supabaseClient.removeChannel(canalRealtimeMeusLeads); canalRealtimeMeusLeads = null;
+  }
+  if (viewAtualId === 'distribuicao' && viewId !== 'distribuicao' && canalRealtimeDistribuicao) {
+    supabaseClient.removeChannel(canalRealtimeDistribuicao); canalRealtimeDistribuicao = null;
+  }
+
+  viewAtualId = viewId;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('ativa'));
+  document.getElementById('view-' + viewId).classList.add('ativa');
+  document.querySelectorAll('.sidebar button').forEach(b => b.classList.toggle('ativo', b.dataset.view === viewId));
+
+  if (viewId === 'home') carregarPainelHome();
+  if (viewId === 'tratamento') { carregarLotes(); prepararSplitTenants(); }
+  if (viewId === 'distribuicao') carregarDistribuicao();
+  if (viewId === 'meusleads') carregarMeusLeads();
+  if (viewId === 'trafegopago') carregarTrafegoPago();
+  if (viewId === 'usuarios') { prepararFormUsuarios(); carregarUsuarios(); }
+  if (viewId === 'publicacoes') carregarPublicacoes();
+  if (viewId === 'configuracoes') carregarConfiguracoes();
+  if (viewId === 'documentos') carregarDocumentos();
+}
+
+function recarregarViewAtual() { navegar(viewAtualId); }
+
+// =====================================================
+// PAINEL (Início) — visão geral pro Admin/Master
+// =====================================================
+async function carregarPainelHome() {
+  const painelDiv = document.getElementById('home-painel-admin');
+  if (usuarioAtual.papel === 'analista' || !tenantEfetivo) { painelDiv.style.display = 'none'; return; }
+  painelDiv.style.display = 'block';
+
+  const { count: totalLeads } = await supabaseClient.from('leads_higienizados').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantEfetivo);
+  const { data: distribuidos } = await supabaseClient.from('leads_distribuidos').select('id, status, capitador_id').eq('tenant_id', tenantEfetivo);
+  const { data: pastas } = await supabaseClient.from('pastas_documentos').select('id').eq('tenant_id', tenantEfetivo);
+  const idsPastas = (pastas || []).map(p => p.id);
+  let docsEnviados = 0;
+  if (idsPastas.length) {
+    const { data: docs } = await supabaseClient.from('documentos_pasta').select('arquivo_path').in('pasta_id', idsPastas);
+    docsEnviados = (docs || []).filter(d => d.arquivo_path).length;
+  }
+  const { data: analistas } = await supabaseClient.from('usuarios_perfil').select('id, nome').eq('tenant_id', tenantEfetivo).eq('papel', 'analista').eq('ativo', true);
+
+  document.getElementById('home-resumo').innerHTML =
+    '<div class="resumo-card"><div class="num">'+(totalLeads||0)+'</div><div class="lbl">Leads importados</div></div>'
+    + '<div class="resumo-card"><div class="num">'+(distribuidos||[]).length+'</div><div class="lbl">Leads distribuídos</div></div>'
+    + '<div class="resumo-card"><div class="num">'+idsPastas.length+'</div><div class="lbl">Pastas de documentos</div></div>'
+    + '<div class="resumo-card"><div class="num">'+docsEnviados+'</div><div class="lbl">Documentos enviados</div></div>';
+
+  const tbody = document.getElementById('home-tabela-analistas');
+  if (!analistas || !analistas.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="vazio">Nenhum analista cadastrado ainda.</td></tr>';
+  } else {
+    tbody.innerHTML = analistas.map(a => {
+      const doAnalista = (distribuidos || []).filter(d => d.capitador_id === a.id);
+      const emAndamento = doAnalista.filter(d => ['novo_lead','em_tratativa','agendado','enviado','pendente_doc','retorno'].includes(d.status)).length;
+      const fechados = doAnalista.filter(d => d.status === 'fechado').length;
+      const semContato = doAnalista.filter(d => d.status === 'sem_contato').length;
+      return '<tr><td>'+a.nome+'</td><td>'+doAnalista.length+'</td><td>'+emAndamento+'</td><td>'+fechados+'</td><td>'+semContato+'</td></tr>';
+    }).join('');
+  }
+
+  // Realtime: qualquer mudança em leads_distribuidos ou pastas_documentos atualiza o painel na hora
+  if (canalRealtimeHome) supabaseClient.removeChannel(canalRealtimeHome);
+  canalRealtimeHome = supabaseClient
+    .channel('painel_home')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'leads_distribuidos' }, () => { if (viewAtualId === 'home') carregarPainelHome(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pastas_documentos' }, () => { if (viewAtualId === 'home') carregarPainelHome(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'documentos_pasta' }, () => { if (viewAtualId === 'home') carregarPainelHome(); })
+    .subscribe();
+}
+
+// =====================================================
+// TRATAMENTO DE BASE
+// =====================================================
+function normalizarTexto(t) {
+  return (t || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+function normalizarCabecalho(h) {
+  return normalizarTexto(h).replace(/[^a-z0-9]/g, '');
+}
+function normalizarCabecalho(h) {
+  let n = normalizarTexto(h).replace(/[^a-z0-9]/g, '');
+  if (n.endsWith('cliente')) n = n.slice(0, -7); // remove sufixo "_cliente" (ex: cpf_cliente -> cpf)
+  return n;
+}
+const MAPA_COLUNAS = {
+  cpf: ['cpf'],
+  cat: ['cat'],
+  nome: ['nome'],
+  cid: ['cid'],
+  parte_corpo: ['partecorpo','partedocorpo'],
+  natureza_lesao: ['naturezalesao','naturezadalesao'],
+  status_higienizacao: ['statustargetdata','status'],
+  data_nascimento: ['datanascimento','dtnascimento','nascimento'],
+  cidade: ['cidade'],
+  uf: ['uf'],
+  data_acidente: ['dataacidente'],
+  afastamento: ['afastamento'],
+  unidade_hospital: ['unidadehospital'],
+  cbo: ['cbo'],
+  razao_social: ['razaosocial']
+};
+function mapearLinha(linhaObj) {
+  const chavesOriginais = Object.keys(linhaObj);
+  const resultado = {};
+  for (const campoDestino in MAPA_COLUNAS) {
+    const alvo = MAPA_COLUNAS[campoDestino];
+    const chaveEncontrada = chavesOriginais.find(k => alvo.includes(normalizarCabecalho(k)));
+    resultado[campoDestino] = chaveEncontrada ? (linhaObj[chaveEncontrada] || '').toString().trim() : '';
+  }
+  // Telefone: qualquer coluna cujo cabeçalho comece com "telefone" pode ter o número
+  // (ex: telefone_cliente, telefone_1_cliente... telefone_5_cliente) — pega os 2 primeiros preenchidos.
+  const telefonesEncontrados = chavesOriginais
+    .filter(k => normalizarCabecalho(k).startsWith('telefone'))
+    .map(k => (linhaObj[k] || '').toString().trim())
+    .filter(v => v.length > 0);
+  resultado.telefone_1 = telefonesEncontrados[0] || '';
+  resultado.telefone_2 = telefonesEncontrados[1] || '';
+  resultado.telefones_extras = telefonesEncontrados.slice(2); // 3º telefone em diante, guardados à parte
+  // E-mail: mesma lógica (email_cliente, email_2_cliente...) — pega o primeiro preenchido.
+  const emailsEncontrados = chavesOriginais
+    .filter(k => normalizarCabecalho(k).startsWith('email'))
+    .map(k => (linhaObj[k] || '').toString().trim())
+    .filter(v => v.length > 0);
+  resultado.email = emailsEncontrados[0] || '';
+  return resultado;
+}
+// Mapeia o texto livre do status do fornecedor pra um motivo padronizado
+function motivoPorStatusHigienizacao(status) {
+  const s = normalizarTexto(status);
+  if (s.includes('nao encontrado')) return 'nao_encontrado_higienizacao';
+  if (s.includes('exposta politicamente') || s.includes('pep')) return 'pessoa_exposta_politicamente';
+  if (s.includes('menor de idade')) return 'menor_de_idade';
+  return null; // status "Sucesso" (ou vazio/desconhecido) -> segue fluxo normal
+}
+function eLegivel(linha) {
+  const textoBusca = normalizarTexto(linha.cid + ' ' + linha.parte_corpo + ' ' + linha.natureza_lesao);
+  return PALAVRAS_CHAVE_ELEGIVEL.some(p => textoBusca.includes(normalizarTexto(p)));
+}
+
+function lerArquivo(arquivo) {
+  return new Promise((resolve, reject) => {
+    const nomeArq = arquivo.name.toLowerCase();
+    if (nomeArq.endsWith('.csv')) {
+      Papa.parse(arquivo, {
+        header: true, skipEmptyLines: true,
+        complete: (res) => resolve(res.data),
+        error: reject
+      });
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const wb = XLSX.read(e.target.result, { type: 'array' });
+          const primeiraAba = wb.SheetNames[0];
+          const dados = XLSX.utils.sheet_to_json(wb.Sheets[primeiraAba], { defval: '' });
+          resolve(dados);
+        } catch (err) { reject(err); }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(arquivo);
+    }
+  });
+}
+
+// Grava um grupo de elegíveis+não-elegíveis pra UM tenant específico, dividindo em sublotes
+async function gravarLoteParaTenant(tenantId, nomeLoteBase, sufixoTenant, elegiveisGrupo, naoElegiveisGrupo, tamanhoSublote, statusDiv) {
+  const totalSublotes = elegiveisGrupo.length === 0 ? 0 : Math.max(1, Math.ceil(elegiveisGrupo.length / tamanhoSublote));
+  let gravados = 0;
+  let naoElegiveisGravados = false;
+
+  for (let i = 0; i < totalSublotes; i++) {
+    const inicio = i * tamanhoSublote;
+    const grupo = elegiveisGrupo.slice(inicio, inicio + tamanhoSublote);
+    if (!grupo.length) continue;
+
+    const numeroParte = String(i + 1).padStart(2, '0');
+    let nomeSublote = nomeLoteBase;
+    if (sufixoTenant) nomeSublote += '_' + sufixoTenant;
+    if (totalSublotes > 1) nomeSublote += '_parte' + numeroParte;
+
+    statusDiv.textContent = 'Gravando "' + nomeSublote + '" (' + grupo.length + ' leads)...';
+
+    const { data: loteInserido, error: erroLote } = await supabaseClient
+      .from('lotes')
+      .insert({ tenant_id: tenantId, nome: nomeSublote, status: 'retornado', quantidade: grupo.length, retornado_em: new Date().toISOString() })
+      .select().single();
+    if (erroLote) throw erroLote;
+
+    const registrosGrupo = grupo.map(l => Object.assign({ tenant_id: tenantId, lote_id: loteInserido.id }, l));
+    const { error: erroElegiveis } = await supabaseClient.from('leads_higienizados').upsert(registrosGrupo, { onConflict: 'tenant_id,cpf' });
+    if (erroElegiveis) throw erroElegiveis;
+
+    gravados += grupo.length;
+
+    if (i === 0 && naoElegiveisGrupo.length) {
+      const registrosNao = naoElegiveisGrupo.map(l => Object.assign({ tenant_id: tenantId, lote_id: loteInserido.id }, l));
+      const { error: erroNao } = await supabaseClient.from('historico_cat_nao_tem_direito').insert(registrosNao);
+      if (erroNao) throw erroNao;
+      naoElegiveisGravados = true;
+    }
+  }
+
+  // Cenário sem nenhum elegível pra esse tenant, mas com "sem direito" pra registrar:
+  // cria um lote "só histórico" (quantidade 0 de captação) só pra não perder o dado.
+  if (!naoElegiveisGravados && naoElegiveisGrupo.length) {
+    let nomeLoteHistorico = nomeLoteBase;
+    if (sufixoTenant) nomeLoteHistorico += '_' + sufixoTenant;
+    nomeLoteHistorico += '_historico';
+
+    const { data: loteHistorico, error: erroLoteHist } = await supabaseClient
+      .from('lotes')
+      .insert({ tenant_id: tenantId, nome: nomeLoteHistorico, status: 'retornado', quantidade: 0, retornado_em: new Date().toISOString() })
+      .select().single();
+    if (erroLoteHist) throw erroLoteHist;
+
+    const registrosNao = naoElegiveisGrupo.map(l => Object.assign({ tenant_id: tenantId, lote_id: loteHistorico.id }, l));
+    const { error: erroNao } = await supabaseClient.from('historico_cat_nao_tem_direito').insert(registrosNao);
+    if (erroNao) throw erroNao;
+  }
+
+  return { gravados, totalSublotes };
+}
+
+document.getElementById('tb-btn-processar').addEventListener('click', async () => {
+  const nomeLote = document.getElementById('tb-nome-lote').value.trim();
+  const inputArquivo = document.getElementById('tb-arquivo');
+  const statusDiv = document.getElementById('tb-status');
+  const btn = document.getElementById('tb-btn-processar');
+  const tamanhoSublote = parseInt(document.getElementById('tb-tamanho-sublote').value, 10) || 1000;
+  const dividirEntreTenants = document.getElementById('tb-check-dividir').checked;
+
+  if (!nomeLote) { statusDiv.textContent = 'Informe o nome do lote.'; statusDiv.style.color = 'var(--danger)'; return; }
+  if (!inputArquivo.files.length) { statusDiv.textContent = 'Selecione um arquivo.'; statusDiv.style.color = 'var(--danger)'; return; }
+
+  let destinos = [];
+  if (dividirEntreTenants) {
+    document.querySelectorAll('.tb-qtd-tenant').forEach(input => {
+      const qtd = parseInt(input.value, 10) || 0;
+      if (qtd > 0) {
+        const tenantInfo = todosOsTenants.find(t => t.id === input.dataset.tenantId);
+        destinos.push({ tenantId: input.dataset.tenantId, nome: tenantInfo ? tenantInfo.nome : '', quantidade: qtd });
+      }
+    });
+    if (!destinos.length) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Informe a quantidade pra pelo menos um cliente.'; return; }
+  } else {
+    if (!tenantEfetivo) { statusDiv.textContent = 'Selecione um cliente (tenant) no topo da tela.'; statusDiv.style.color = 'var(--danger)'; return; }
+    destinos = [{ tenantId: tenantEfetivo, nome: '', quantidade: null }];
+  }
+
+  btn.disabled = true;
+  statusDiv.style.color = 'var(--text-secondary)';
+  statusDiv.textContent = 'Lendo arquivo...';
+
+  try {
+    const linhasBrutas = await lerArquivo(inputArquivo.files[0]);
+    statusDiv.textContent = 'Processando ' + linhasBrutas.length + ' linhas...';
+
+    const elegiveis = [];
+    const naoElegiveis = [];
+    const cpfsVistos = new Set();
+
+    for (const linhaBruta of linhasBrutas) {
+      const linha = mapearLinha(linhaBruta);
+      if (!linha.cpf) continue;
+      const cpfLimpo = linha.cpf.replace(/\D/g, '');
+      if (!cpfLimpo || cpfsVistos.has(cpfLimpo)) continue;
+      cpfsVistos.add(cpfLimpo);
+
+      const motivoExclusao = motivoPorStatusHigienizacao(linha.status_higienizacao);
+
+      if (motivoExclusao) {
+        naoElegiveis.push({ cpf: cpfLimpo, nome: linha.nome, motivo: motivoExclusao });
+      } else {
+        // A elegibilidade (tipo de lesão) já foi filtrada antes de mandar pra higienização (fluxo local).
+        // Aqui só descartamos quem o próprio fornecedor não confirmou (ver motivoPorStatusHigienizacao acima).
+        elegiveis.push({
+          cpf: cpfLimpo, numero_cat: linha.cat, nome: linha.nome, telefone_1: linha.telefone_1, telefone_2: linha.telefone_2,
+          telefones_extras: (linha.telefones_extras && linha.telefones_extras.length) ? linha.telefones_extras : null,
+          email: linha.email, cid: linha.cid, parte_corpo: linha.parte_corpo, natureza_lesao: linha.natureza_lesao,
+          data_nascimento: linha.data_nascimento, cidade: linha.cidade, uf: linha.uf, data_acidente: linha.data_acidente,
+          afastamento: linha.afastamento, unidade_hospital: linha.unidade_hospital, cbo: linha.cbo, razao_social: linha.razao_social
+        });
+      }
+    }
+
+    let ponteiroElegivel = 0, ponteiroNaoElegivel = 0;
+    let totalGravado = 0;
+    const resumoPorTenant = [];
+
+    for (let d = 0; d < destinos.length; d++) {
+      const destino = destinos[d];
+      const ultimoDaLista = d === destinos.length - 1;
+
+      let qtdElegivel;
+      if (destino.quantidade === null) {
+        qtdElegivel = elegiveis.length;
+      } else if (ultimoDaLista) {
+        qtdElegivel = elegiveis.length - ponteiroElegivel;
+      } else {
+        qtdElegivel = Math.min(destino.quantidade, elegiveis.length - ponteiroElegivel);
+      }
+      const chunkElegivel = elegiveis.slice(ponteiroElegivel, ponteiroElegivel + qtdElegivel);
+      ponteiroElegivel += qtdElegivel;
+
+      let qtdNaoElegivel;
+      if (destino.quantidade === null || ultimoDaLista) {
+        qtdNaoElegivel = naoElegiveis.length - ponteiroNaoElegivel;
+      } else {
+        const proporcao = elegiveis.length ? (qtdElegivel / elegiveis.length) : 0;
+        qtdNaoElegivel = Math.round(naoElegiveis.length * proporcao);
+      }
+      const chunkNaoElegivel = naoElegiveis.slice(ponteiroNaoElegivel, ponteiroNaoElegivel + qtdNaoElegivel);
+      ponteiroNaoElegivel += qtdNaoElegivel;
+
+      const sufixo = dividirEntreTenants ? normalizarCabecalho(destino.nome) : '';
+      const resultado = await gravarLoteParaTenant(destino.tenantId, nomeLote, sufixo, chunkElegivel, chunkNaoElegivel, tamanhoSublote, statusDiv);
+      totalGravado += resultado.gravados;
+      const descricaoSublotes = resultado.totalSublotes > 0 ? (resultado.gravados + ' elegíveis em ' + resultado.totalSublotes + ' sublote(s)') : '0 elegíveis (nenhum sublote de captação)';
+      resumoPorTenant.push((destino.nome || 'cliente') + ': ' + descricaoSublotes);
+    }
+
+    statusDiv.style.color = 'var(--success)';
+    statusDiv.textContent = 'Concluído! ' + totalGravado + ' elegíveis, ' + naoElegiveis.length + ' sem direito. ' + resumoPorTenant.join(' | ');
+    document.getElementById('tb-nome-lote').value = '';
+    inputArquivo.value = '';
+    document.getElementById('tb-check-dividir').checked = false;
+    document.getElementById('tb-split-tenants').style.display = 'none';
+    carregarLotes();
+  } catch (err) {
+    statusDiv.style.color = 'var(--danger)';
+    statusDiv.textContent = 'Erro: ' + (err.message || JSON.stringify(err));
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+const STATUS_DIST_LABEL = { sem_leads: 'Sem leads', nao_distribuido: 'Não distribuído', parcial: 'Parcial', distribuido: 'Distribuído' };
+const STATUS_DIST_SELO = { sem_leads: 'selo-vermelho', nao_distribuido: 'selo-laranja', parcial: 'selo-laranja', distribuido: 'selo-verde' };
+
+async function carregarLotes() {
+  const tbody = document.getElementById('tb-tabela-lotes');
+  if (!tenantEfetivo) { tbody.innerHTML = '<tr><td colspan="4" class="vazio">Selecione um cliente.</td></tr>'; return; }
+  const { data, error } = await supabaseClient.from('vw_status_lotes').select('*').eq('tenant_id', tenantEfetivo).order('criado_em', { ascending: false });
+  if (error) { tbody.innerHTML = '<tr><td colspan="4" class="vazio">Erro ao carregar: '+error.message+'</td></tr>'; return; }
+  if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="4" class="vazio">Nenhum lote importado ainda.</td></tr>'; return; }
+  tbody.innerHTML = data.map(l => {
+    const selo = STATUS_DIST_SELO[l.status_distribuicao] || 'selo-laranja';
+    const label = STATUS_DIST_LABEL[l.status_distribuicao] || l.status_distribuicao;
+    const contagem = l.status_distribuicao === 'parcial' ? ' ('+l.total_distribuidos+'/'+l.total_leads+')' : '';
+    return '<tr><td>'+l.nome+'</td><td>'+(l.quantidade ?? '-')+'</td><td><span class="selo '+selo+'">'+label+contagem+'</span></td><td>'+new Date(l.criado_em).toLocaleString('pt-BR')+'</td></tr>';
+  }).join('');
+}
+
+// Monta os campos de "dividir entre tenants" — só aparece pro Master
+function prepararSplitTenants() {
+  const wrap = document.getElementById('tb-split-wrap');
+  if (usuarioAtual.papel !== 'master' || !todosOsTenants.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const container = document.getElementById('tb-split-tenants');
+  container.innerHTML = todosOsTenants.map(t =>
+    '<div class="linha-form" style="margin-bottom:8px;"><div class="campo" style="max-width:220px; margin:0;">'
+    + '<label style="font-weight:400;">'+t.nome+'</label>'
+    + '<input type="number" class="tb-qtd-tenant" data-tenant-id="'+t.id+'" min="0" placeholder="0">'
+    + '</div></div>'
+  ).join('');
+}
+
+document.getElementById('tb-check-dividir').addEventListener('change', (e) => {
+  document.getElementById('tb-split-tenants').style.display = e.target.checked ? 'block' : 'none';
+});
+
+// =====================================================
+// DISTRIBUIÇÃO
+// =====================================================
+async function carregarDistribuicao() {
+  const tbody = document.getElementById('dist-tabela');
+  const selectAnalista = document.getElementById('dist-select-analista');
+  const selectLote = document.getElementById('dist-select-lote');
+  if (!tenantEfetivo) { tbody.innerHTML = '<tr><td colspan="5" class="vazio">Selecione um cliente.</td></tr>'; return; }
+
+  tbody.innerHTML = '<tr><td colspan="5" class="vazio">Carregando...</td></tr>';
+
+  const { data: analistas } = await supabaseClient.from('usuarios_perfil').select('id, nome').eq('tenant_id', tenantEfetivo).eq('papel', 'analista').eq('ativo', true);
+  selectAnalista.innerHTML = '<option value="">Selecione o analista...</option>' + (analistas || []).map(a => '<option value="'+a.id+'">'+a.nome+'</option>').join('');
+
+  const { data: lotes } = await supabaseClient.from('vw_status_lotes').select('lote_id, nome, status_distribuicao, total_distribuidos, total_leads').eq('tenant_id', tenantEfetivo).order('criado_em', { ascending: false });
+  const loteSelecionadoAntes = selectLote.value;
+  selectLote.innerHTML = '<option value="">Todos os lotes</option>' + (lotes || []).map(l => {
+    const jaDistribuidoTag = l.status_distribuicao === 'distribuido' ? ' ✅ já distribuído' : (l.status_distribuicao === 'parcial' ? ' (parcial '+l.total_distribuidos+'/'+l.total_leads+')' : '');
+    return '<option value="'+l.lote_id+'">'+l.nome+jaDistribuidoTag+'</option>';
+  }).join('');
+  if (loteSelecionadoAntes) selectLote.value = loteSelecionadoAntes;
+
+  let query = supabaseClient.from('leads_higienizados').select('id, nome, cpf, telefone_1, cid, lote_id').eq('tenant_id', tenantEfetivo);
+  if (selectLote.value) query = query.eq('lote_id', selectLote.value);
+  const { data: todosLeads } = await query;
+
+  const { data: jaDistribuidos } = await supabaseClient.from('leads_distribuidos').select('lead_id').eq('tenant_id', tenantEfetivo);
+  const idsDistribuidos = new Set((jaDistribuidos || []).map(d => d.lead_id));
+  const disponiveis = (todosLeads || []).filter(l => !idsDistribuidos.has(l.id));
+
+  // Realtime: lote novo importado ou lead recém-distribuído por outra pessoa atualiza a lista sozinho
+  if (canalRealtimeDistribuicao) supabaseClient.removeChannel(canalRealtimeDistribuicao);
+  canalRealtimeDistribuicao = supabaseClient
+    .channel('distribuicao_realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'leads_higienizados' }, () => { if (viewAtualId === 'distribuicao') carregarDistribuicao(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'leads_distribuidos' }, () => { if (viewAtualId === 'distribuicao') carregarDistribuicao(); })
+    .subscribe();
+
+  if (!disponiveis.length) { tbody.innerHTML = '<tr><td colspan="5" class="vazio">Nenhum lead disponível no momento.</td></tr>'; return; }
+
+  tbody.innerHTML = disponiveis.map(l =>
+    '<tr><td><input type="checkbox" class="dist-check" value="'+l.id+'"></td><td>'+(l.nome||'-')+'</td><td>'+l.cpf+'</td><td>'+(l.telefone_1||'-')+'</td><td>'+(l.cid||'-')+'</td></tr>'
+  ).join('');
+}
+
+document.getElementById('dist-select-lote').addEventListener('change', carregarDistribuicao);
+document.getElementById('dist-check-todos').addEventListener('change', (e) => {
+  document.querySelectorAll('.dist-check').forEach(c => c.checked = e.target.checked);
+});
+document.getElementById('dist-btn-recarregar').addEventListener('click', carregarDistribuicao);
+
+document.getElementById('dist-btn-distribuir').addEventListener('click', async () => {
+  const analistaId = document.getElementById('dist-select-analista').value;
+  const statusDiv = document.getElementById('dist-status');
+  const selecionados = Array.from(document.querySelectorAll('.dist-check:checked')).map(c => c.value);
+
+  if (!analistaId) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Selecione um analista.'; return; }
+  if (!selecionados.length) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Selecione ao menos um lead.'; return; }
+
+  const registros = selecionados.map(leadId => ({
+    tenant_id: tenantEfetivo, lead_id: leadId, capitador_id: analistaId, distribuido_por: usuarioAtual.id, status: 'novo_lead'
+  }));
+
+  const { error } = await supabaseClient.from('leads_distribuidos').insert(registros);
+  if (error) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Erro: ' + error.message; return; }
+
+  statusDiv.style.color = 'var(--success)';
+  statusDiv.textContent = selecionados.length + ' lead(s) distribuído(s) com sucesso.';
+  carregarDistribuicao();
+});
+
+// =====================================================
+// MEUS LEADS
+// =====================================================
+const STATUS_LEADS = ['novo_lead','em_tratativa','agendado','enviado','pendente_doc','retorno','fechado','sem_contato','sem_interesse','sem_direito','bloqueado','deu_entrada_sozinho','repasse'];
+const STATUS_LABEL = {
+  novo_lead:'Novo Lead', em_tratativa:'Em tratativa', agendado:'Agendado', enviado:'Enviado',
+  pendente_doc:'Pendente DOC', retorno:'Retorno', fechado:'Fechado', sem_contato:'Sem Contato',
+  sem_interesse:'Sem Interesse', sem_direito:'Sem Direito', bloqueado:'Bloqueado',
+  deu_entrada_sozinho:'Deu Entrada Sozinho', repasse:'Repasse'
+};
+
+async function carregarMeusLeads() {
+  const detalheDiv = document.getElementById('ml-detalhe');
+  const listaDiv = document.getElementById('ml-lista-itens');
+  const resumoDiv = document.getElementById('ml-resumo');
+  listaDiv.innerHTML = '<div class="vazio">Carregando...</div>';
+
+  let query = supabaseClient
+    .from('leads_distribuidos')
+    .select('id, status, tentativas_sem_contato, observacao, distribuido_em, leads_higienizados(id, nome, cpf, telefone_1, telefone_2, telefones_extras, email, cid, parte_corpo, natureza_lesao, data_nascimento, cidade, uf, data_acidente, afastamento, unidade_hospital, cbo, razao_social, numero_cat)')
+    .order('atualizado_em', { ascending: false });
+
+  // Master vê todos os tenants por padrão (RLS permite), mas a tela deve respeitar
+  // o seletor de cliente do topo, igual as outras telas — sem isso, tudo aparecia misturado.
+  if (tenantEfetivo) query = query.eq('tenant_id', tenantEfetivo);
+
+  const { data, error } = await query;
+
+  if (error) { listaDiv.innerHTML = '<div class="vazio">Erro ao carregar: '+error.message+'</div>'; return; }
+
+  meusLeadsAtuais = data || [];
+  montarResumoMeusLeads();
+  await carregarContadoresNaoLidas();
+  renderizarListaMeusLeads();
+
+  if (!meusLeadsAtuais.length) {
+    detalheDiv.innerHTML = '<div class="vazio">Nenhum lead atribuído.</div>';
+  }
+
+  // Realtime: se um lead novo for distribuído pra você, ou alguém mudar status, atualiza sozinho
+  if (canalRealtimeMeusLeads) supabaseClient.removeChannel(canalRealtimeMeusLeads);
+  canalRealtimeMeusLeads = supabaseClient
+    .channel('meus_leads_realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'leads_distribuidos' }, () => { if (viewAtualId === 'meusleads') carregarMeusLeads(); })
+    .subscribe();
+
+  // Realtime: mensagem nova do cliente em qualquer chat atualiza as bolinhas sem recarregar tudo
+  if (canalRealtimeBadgesChat) supabaseClient.removeChannel(canalRealtimeBadgesChat);
+  canalRealtimeBadgesChat = supabaseClient
+    .channel('badges_chat_realtime')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensagens_chat_pasta', filter: 'remetente_tipo=eq.cliente' }, async () => {
+      if (viewAtualId === 'meusleads') { await carregarContadoresNaoLidas(); renderizarListaMeusLeads(); }
+    })
+    .subscribe();
+}
+
+// pastaIdPorLead: { leadId -> pastaId }; naoLidasPorLead: { leadId -> quantidade }
+let pastaIdPorLead = {};
+let naoLidasPorLead = {};
+let canalRealtimeBadgesChat = null;
+
+async function carregarContadoresNaoLidas() {
+  pastaIdPorLead = {};
+  naoLidasPorLead = {};
+  const leadIds = meusLeadsAtuais.map(d => (d.leads_higienizados || {}).id).filter(Boolean);
+  if (!leadIds.length) return;
+
+  const { data: pastas } = await supabaseClient.from('pastas_documentos').select('id, lead_id').in('lead_id', leadIds);
+  if (!pastas || !pastas.length) return;
+
+  const pastaIds = pastas.map(p => { pastaIdPorLead[p.lead_id] = p.id; return p.id; });
+
+  const { data: leituras } = await supabaseClient.from('chat_leituras').select('pasta_id, lida_em').eq('usuario_id', usuarioAtual.id).in('pasta_id', pastaIds);
+  const leituraPorPasta = {};
+  (leituras || []).forEach(l => { leituraPorPasta[l.pasta_id] = l.lida_em; });
+
+  const { data: mensagens } = await supabaseClient.from('mensagens_chat_pasta').select('pasta_id, criado_em').eq('remetente_tipo', 'cliente').in('pasta_id', pastaIds);
+  (mensagens || []).forEach(m => {
+    const ultimaLeitura = leituraPorPasta[m.pasta_id] || '1970-01-01T00:00:00Z';
+    if (m.criado_em > ultimaLeitura) {
+      const leadId = Object.keys(pastaIdPorLead).find(lid => pastaIdPorLead[lid] === m.pasta_id);
+      if (leadId) naoLidasPorLead[leadId] = (naoLidasPorLead[leadId] || 0) + 1;
+    }
+  });
+}
+
+function montarResumoMeusLeads() {
+  const resumoDiv = document.getElementById('ml-resumo');
+  const hojeStr = new Date().toDateString();
+  const recebidosHoje = meusLeadsAtuais.filter(d => new Date(d.distribuido_em).toDateString() === hojeStr).length;
+  const emAndamento = meusLeadsAtuais.filter(d => ['novo_lead','em_tratativa','agendado','enviado','pendente_doc','retorno'].includes(d.status)).length;
+  const semContato = meusLeadsAtuais.filter(d => d.status === 'sem_contato').length;
+  const fechado = meusLeadsAtuais.filter(d => d.status === 'fechado').length;
+  const bloqueadoInvalido = meusLeadsAtuais.filter(d => ['bloqueado','sem_interesse','sem_direito','deu_entrada_sozinho'].includes(d.status)).length;
+  const repasse = meusLeadsAtuais.filter(d => d.status === 'repasse').length;
+
+  resumoDiv.innerHTML =
+    '<div class="resumo-card"><div class="num">'+recebidosHoje+'</div><div class="lbl">Recebidos hoje</div></div>'
+    + '<div class="resumo-card"><div class="num">'+emAndamento+'</div><div class="lbl">Em andamento</div></div>'
+    + '<div class="resumo-card"><div class="num">'+semContato+'</div><div class="lbl">Sem contato</div></div>'
+    + '<div class="resumo-card"><div class="num">'+fechado+'</div><div class="lbl">Fechado</div></div>'
+    + '<div class="resumo-card"><div class="num">'+bloqueadoInvalido+'</div><div class="lbl">Bloqueado / Inválido</div></div>'
+    + '<div class="resumo-card"><div class="num">'+repasse+'</div><div class="lbl">Repasse</div></div>';
+}
+
+function renderizarListaMeusLeads() {
+  const listaDiv = document.getElementById('ml-lista-itens');
+  const tituloDiv = document.getElementById('ml-pendentes-titulo');
+  const termoBusca = normalizarTexto(document.getElementById('ml-busca').value || '');
+
+  const filtrados = meusLeadsAtuais.filter(d => {
+    if (!termoBusca) return true;
+    const lead = d.leads_higienizados || {};
+    return normalizarTexto(lead.nome).includes(termoBusca) || (lead.cpf || '').includes(termoBusca);
+  });
+
+  tituloDiv.textContent = 'Pendentes (' + filtrados.length + ')';
+
+  if (!filtrados.length) { listaDiv.innerHTML = '<div class="vazio">Nada encontrado.</div>'; return; }
+
+  listaDiv.innerHTML = filtrados.map(d => {
+    const lead = d.leads_higienizados || {};
+    const ativo = d.id === leadSelecionadoId ? ' ativo' : '';
+    const qtdNaoLidas = naoLidasPorLead[lead.id] || 0;
+    const bolinha = qtdNaoLidas > 0
+      ? '<span style="background:#DC2626; color:#fff; border-radius:999px; min-width:18px; height:18px; padding:0 5px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; margin-left:6px;">'+qtdNaoLidas+'</span>'
+      : '';
+    return '<div class="ml-item'+ativo+'" data-id="'+d.id+'">'
+      + '<div><div class="ml-item-nome">'+(lead.nome||'-')+bolinha+'</div><div class="ml-item-cpf">'+(lead.cpf||'-')+'</div></div>'
+      + '<span class="selo selo-verde">'+STATUS_LABEL[d.status]+'</span>'
+      + '</div>';
+  }).join('');
+
+  listaDiv.querySelectorAll('.ml-item').forEach(item => {
+    item.addEventListener('click', () => {
+      leadSelecionadoId = item.dataset.id;
+      renderizarListaMeusLeads();
+      renderizarDetalheMeusLeads();
+    });
+  });
+}
+
+document.getElementById('ml-busca').addEventListener('input', renderizarListaMeusLeads);
+
+function renderizarDetalheMeusLeads() {
+  const detalheDiv = document.getElementById('ml-detalhe');
+  const d = meusLeadsAtuais.find(x => x.id === leadSelecionadoId);
+  if (!d) { detalheDiv.innerHTML = '<div class="vazio">Selecione um lead na lista à direita pra ver os detalhes.</div>'; return; }
+
+  const lead = d.leads_higienizados || {};
+  const opcoesStatus = STATUS_LEADS.map(s => '<option value="'+s+'"'+(s===d.status?' selected':'')+'>'+STATUS_LABEL[s]+'</option>').join('');
+  const outrosNumeros = [lead.telefone_2, ...(lead.telefones_extras || [])].filter(Boolean);
+  const numeroWhatsappTenant = (tenantsInfo[tenantEfetivo] || {}).numero_whatsapp;
+  const dicaNumeroWhatsapp = numeroWhatsappTenant
+    ? 'Antes de mandar, confirme que está logado no WhatsApp do número <strong>'+numeroWhatsappTenant+'</strong> (deste cliente).'
+    : 'Este cliente ainda não tem um número de WhatsApp cadastrado no sistema — confirme com o Admin/Master qual número usar antes de enviar.';
+
+  detalheDiv.innerHTML =
+    '<div class="ml-det-recebido">recebido em '+new Date(d.distribuido_em).toLocaleDateString('pt-BR')+'</div>'
+    + '<div class="ml-det-nome">'+(lead.nome||'-')+'</div>'
+    + '<div class="ml-det-linha"><strong>CPF:</strong>'+(lead.cpf||'-')
+      + '&nbsp;&nbsp;<strong>Telefone:</strong> '+(lead.telefone_1 ? '<a href="tel:'+lead.telefone_1+'">'+lead.telefone_1+'</a>' : '-')
+      + '&nbsp;&nbsp;<strong>E-mail:</strong> '+(lead.email || '—')
+    + '</div>'
+    + '<div class="ml-det-grid">'
+      + '<div><strong>Nascimento:</strong> '+(lead.data_nascimento||'-')+'</div>'
+      + '<div><strong>CAT:</strong> '+(lead.numero_cat||'-')+'</div>'
+      + '<div><strong>Tipo de lesão:</strong> '+(lead.natureza_lesao||'-')+'</div>'
+      + '<div><strong>Parte do corpo:</strong> '+(lead.parte_corpo||'-')+'</div>'
+      + '<div><strong>CID:</strong> '+(lead.cid||'-')+'</div>'
+      + '<div><strong>Ano/data do acidente:</strong> '+(lead.data_acidente||'-')+'</div>'
+      + '<div><strong>Empresa:</strong> '+(lead.razao_social||'-')+'</div>'
+      + '<div><strong>Função (CBO):</strong> '+(lead.cbo||'-')+'</div>'
+      + '<div><strong>Afastamento:</strong> '+(lead.afastamento||'-')+'</div>'
+      + '<div><strong>Cidade/UF:</strong> '+([lead.cidade, lead.uf].filter(Boolean).join(' / ')||'-')+'</div>'
+      + '<div><strong>Unidade/Hospital:</strong> '+(lead.unidade_hospital||'-')+'</div>'
+    + '</div>'
+    + (outrosNumeros.length ? (
+        '<details style="margin:8px 0;">'
+        + '<summary style="cursor:pointer; font-size:13px; color:var(--brand); font-weight:600;">Ver outros números ('+outrosNumeros.length+')</summary>'
+        + '<div style="margin-top:6px;">'+outrosNumeros.map(n => '<a href="tel:'+n+'" style="display:inline-block; margin:2px 8px 2px 0; padding:4px 10px; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; font-size:13px;">'+n+'</a>').join('')+'</div>'
+        + '</details>'
+      ) : '')
+    + '<div class="ml-det-botoes">'
+      + '<button class="btn btn-secundario" id="ml-btn-sms" disabled title="SMS ainda não contratado">Mandar SMS de apresentação</button>'
+      + '<button class="btn btn-secundario" id="ml-btn-whatsapp">Enviar mensagem por WhatsApp</button>'
+    + '</div>'
+    + '<div class="ml-det-dica">💡 '+dicaNumeroWhatsapp+'</div>'
+    + '<div class="ml-det-botoes" style="border-top:1px solid var(--border); padding-top:14px;">'
+      + '<button class="btn btn-secundario" id="ml-btn-ficha">Preencher Ficha</button>'
+      + '<button class="btn btn-secundario" id="ml-btn-capa">Gerar Capa</button>'
+      + '<button class="btn btn-secundario" id="ml-btn-contrato">Gerar Contrato</button>'
+      + '<button class="btn btn-secundario" id="ml-btn-relatorio">Gerar Relatório</button>'
+      + '<button class="btn" id="ml-btn-link-docs">Gerar link de documentos</button>'
+      + '<button class="btn btn-secundario" id="ml-btn-chat">💬 Chat</button>'
+      + '<button class="btn btn-secundario" id="ml-btn-zapsign">Enviar Contrato pra assinatura (ZapSign)</button>'
+    + '</div>'
+    + '<div id="ml-link-docs-resultado" style="display:none; margin:10px 0; background:#fff; border:1px solid var(--success); border-radius:8px; padding:12px; font-size:13px;"></div>'
+    + '<div id="ml-zapsign-resultado" style="display:none; margin:10px 0; background:#fff; border:1px solid var(--success); border-radius:8px; padding:12px; font-size:13px;"></div>'
+    + '<div class="ml-det-form">'
+      + '<label>Status do contato</label>'
+      + '<select id="ml-status">'+opcoesStatus+'</select>'
+      + '<label>Observação</label>'
+      + '<textarea id="ml-obs" placeholder="O que foi conversado, motivo do status...">'+(d.observacao||'')+'</textarea>'
+      + '<button class="btn" id="ml-btn-salvar">Salvar</button> '
+      + '<button class="btn btn-perigo" id="ml-btn-semcontato">Sem contato</button>'
+    + '</div>';
+
+  document.getElementById('ml-btn-sms').addEventListener('click', () => alert('SMS ainda não configurado (aguardando fornecedor).'));
+  document.getElementById('ml-btn-whatsapp').addEventListener('click', () => {
+    if (!lead.telefone_1) { alert('Este lead não tem telefone principal cadastrado.'); return; }
+    const numeroLimpo = lead.telefone_1.replace(/\D/g, '');
+    const numeroComDDI = numeroLimpo.length <= 11 ? '55' + numeroLimpo : numeroLimpo; // adiciona +55 se não tiver
+    const mensagem = 'Olá, ' + (lead.nome || '') + '! Aqui é da equipe jurídica entrando em contato sobre o seu caso (CAT). Podemos conversar?';
+    window.open('https://wa.me/' + numeroComDDI + '?text=' + encodeURIComponent(mensagem), '_blank');
+  });
+
+  document.getElementById('ml-btn-ficha').addEventListener('click', () => abrirModalFicha(lead));
+  document.getElementById('ml-btn-capa').addEventListener('click', () => abrirModalDocumento('capa', 'Capa', lead));
+  document.getElementById('ml-btn-relatorio').addEventListener('click', () => abrirModalDocumento('relatorio', 'Relatório', lead));
+  document.getElementById('ml-btn-contrato').addEventListener('click', () => gerarContratoCompleto(lead));
+  document.getElementById('ml-btn-link-docs').addEventListener('click', () => gerarLinkDocumentos(lead));
+  document.getElementById('ml-btn-chat').addEventListener('click', () => abrirChatDoLead(lead));
+  document.getElementById('ml-btn-zapsign').addEventListener('click', () => enviarContratoParaAssinatura(lead));
+
+  document.getElementById('ml-btn-salvar').addEventListener('click', async () => {
+    const btn = document.getElementById('ml-btn-salvar');
+    const novoStatus = document.getElementById('ml-status').value;
+    const novaObs = document.getElementById('ml-obs').value;
+    btn.disabled = true;
+    const { error } = await supabaseClient.from('leads_distribuidos').update({ status: novoStatus, observacao: novaObs, atualizado_em: new Date().toISOString() }).eq('id', d.id);
+    btn.disabled = false;
+    if (error) { alert('Erro ao salvar: ' + error.message); return; }
+    carregarMeusLeads();
+  });
+
+  document.getElementById('ml-btn-semcontato').addEventListener('click', async () => {
+    if (!confirm('Marcar como "sem contato"? Na 3ª vez, o lead sai do pool e vai pro Tráfego Pago.')) return;
+    const btn = document.getElementById('ml-btn-semcontato');
+    btn.disabled = true;
+    const { data: resultado, error } = await supabaseClient.rpc('marcar_sem_contato', { p_lead_distribuido_id: d.id });
+    btn.disabled = false;
+    if (error) { alert('Erro: ' + error.message); return; }
+    if (resultado === 'movido_trafego_pago') { alert('Lead atingiu 3 tentativas sem contato e foi movido pro Tráfego Pago.'); leadSelecionadoId = null; }
+    carregarMeusLeads();
+  });
+}
+
+// =====================================================
+// TRÁFEGO PAGO
+// =====================================================
+let dadosTrafegoPagoAtual = [];
+
+const MOTIVO_LABEL = { sem_contato_3x: 'Sem Contato 3x', numero_invalido: 'Número Inválido', whatsapp_inexistente: 'WhatsApp Inexistente' };
+
+async function carregarTrafegoPago() {
+  const tbody = document.getElementById('tp-tabela');
+  const resumoDiv = document.getElementById('tp-resumo');
+  if (!tenantEfetivo) { tbody.innerHTML = '<tr><td colspan="6" class="vazio">Selecione um cliente.</td></tr>'; return; }
+
+  tbody.innerHTML = '<tr><td colspan="6" class="vazio">Carregando...</td></tr>';
+
+  const { data, error } = await supabaseClient
+    .from('historico_trafego_pago')
+    .select('motivo, liberado_em, apagar_em, leads_higienizados(nome, cpf, telefone_1)')
+    .eq('tenant_id', tenantEfetivo)
+    .order('liberado_em', { ascending: false });
+
+  if (error) { tbody.innerHTML = '<tr><td colspan="6" class="vazio">Erro: '+error.message+'</td></tr>'; return; }
+
+  dadosTrafegoPagoAtual = data || [];
+
+  const total = dadosTrafegoPagoAtual.length;
+  const semContato = dadosTrafegoPagoAtual.filter(d => d.motivo === 'sem_contato_3x').length;
+  resumoDiv.innerHTML =
+    '<div class="resumo-card"><div class="num">'+total+'</div><div class="lbl">Total no Tráfego Pago</div></div>'
+    + '<div class="resumo-card"><div class="num">'+semContato+'</div><div class="lbl">Por sem contato (3x)</div></div>';
+
+  if (!total) { tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum lead no Tráfego Pago.</td></tr>'; return; }
+
+  tbody.innerHTML = dadosTrafegoPagoAtual.map(d => {
+    const lead = d.leads_higienizados || {};
+    return '<tr><td>'+(lead.nome||'-')+'</td><td>'+(lead.cpf||'-')+'</td><td>'+(lead.telefone_1||'-')+'</td>'
+      + '<td>'+(MOTIVO_LABEL[d.motivo]||d.motivo)+'</td>'
+      + '<td>'+new Date(d.liberado_em).toLocaleDateString('pt-BR')+'</td>'
+      + '<td>'+(d.apagar_em ? new Date(d.apagar_em).toLocaleDateString('pt-BR') : '-')+'</td></tr>';
+  }).join('');
+}
+
+document.getElementById('tp-btn-exportar').addEventListener('click', () => {
+  if (!dadosTrafegoPagoAtual.length) { alert('Nada para exportar.'); return; }
+  const linhas = [['Nome','CPF','Telefone','Motivo','Liberado em','Apaga em']];
+  dadosTrafegoPagoAtual.forEach(d => {
+    const lead = d.leads_higienizados || {};
+    linhas.push([lead.nome||'', lead.cpf||'', lead.telefone_1||'', MOTIVO_LABEL[d.motivo]||d.motivo, d.liberado_em, d.apagar_em||'']);
+  });
+  const csv = linhas.map(l => l.map(v => '"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'trafego_pago.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// =====================================================
+// USUÁRIOS (criar login de Analista)
+// =====================================================
+function prepararFormUsuarios() {
+  const campoPapel = document.getElementById('us-campo-papel');
+  const formTitulo = document.getElementById('us-form-titulo');
+  const btn = document.getElementById('us-btn-criar');
+  document.getElementById('us-credenciais').style.display = 'none'; // nunca deixa senha antiga visível ao reabrir a tela
+  document.getElementById('us-status').textContent = '';
+  document.getElementById('us-nome').value = '';
+  if (usuarioAtual.papel === 'master') {
+    campoPapel.style.display = 'block';
+    formTitulo.textContent = 'Novo Usuário';
+    btn.textContent = 'Criar login';
+  } else {
+    campoPapel.style.display = 'none';
+    formTitulo.textContent = 'Novo Analista';
+    btn.textContent = 'Criar login de Analista';
+  }
+}
+
+async function carregarUsuarios() {
+  const tbody = document.getElementById('us-tabela');
+  if (!tenantEfetivo) { tbody.innerHTML = '<tr><td colspan="6" class="vazio">Selecione um cliente.</td></tr>'; return; }
+  const { data, error } = await supabaseClient
+    .from('usuarios_perfil')
+    .select('id, nome, papel, ativo, criado_em')
+    .eq('tenant_id', tenantEfetivo)
+    .order('criado_em', { ascending: false });
+  if (error) { tbody.innerHTML = '<tr><td colspan="6" class="vazio">Erro: '+error.message+'</td></tr>'; return; }
+  if (!data || !data.length) { tbody.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum usuário neste cliente ainda.</td></tr>'; return; }
+
+  // Busca os e-mails (ficam no Auth, só a Edge Function com service_role consegue ler)
+  let emailsPorId = {};
+  let avisoEmail = '';
+  const { data: dadosEmail, error: erroEmail } = await supabaseClient.functions.invoke('listar-emails', { body: { tenant_id: tenantEfetivo } });
+  if (erroEmail) {
+    let msg = erroEmail.message;
+    if (erroEmail.context && typeof erroEmail.context.json === 'function') {
+      try { const corpo = await erroEmail.context.json(); if (corpo && corpo.error) msg = corpo.error; } catch (e) {}
+    }
+    avisoEmail = 'Não foi possível carregar os e-mails: ' + msg;
+  } else if (dadosEmail && dadosEmail.error) {
+    avisoEmail = 'Não foi possível carregar os e-mails: ' + dadosEmail.error;
+  } else if (dadosEmail && dadosEmail.emails) {
+    emailsPorId = dadosEmail.emails;
+  }
+  if (avisoEmail) {
+    const avisoDiv = document.getElementById('us-aviso-email');
+    avisoDiv.textContent = avisoEmail;
+    avisoDiv.style.display = 'block';
+  } else {
+    document.getElementById('us-aviso-email').style.display = 'none';
+  }
+
+  tbody.innerHTML = data.map(u => {
+    // Analista: Admin ou Master gerenciam. Admin: só o Master gerencia (Admin nunca mexe em outro Admin).
+    const podeGerenciar = u.papel === 'analista' || (u.papel === 'admin' && usuarioAtual.papel === 'master');
+    const email = emailsPorId[u.id] || '-';
+    const acoes = podeGerenciar
+      ? '<button class="btn btn-sm btn-secundario us-editar" data-id="'+u.id+'" data-nome="'+u.nome.replace(/"/g,'&quot;')+'" data-email="'+email+'">Editar</button> '
+        + '<button class="btn btn-sm btn-secundario us-resetar" data-id="'+u.id+'">Resetar senha</button> '
+        + '<button class="btn btn-sm '+(u.ativo ? 'btn-perigo' : 'btn-secundario')+' us-toggle" data-id="'+u.id+'" data-ativo="'+u.ativo+'">'+(u.ativo ? 'Inativar' : 'Reativar')+'</button>'
+      : '<span style="color:var(--text-secondary); font-size:12px;">—</span>';
+    return '<tr><td>'+u.nome+'</td><td>'+email+'</td><td>'+u.papel+'</td><td>'+(u.ativo ? '<span class="selo selo-verde">Ativo</span>' : '<span class="selo selo-vermelho">Inativo</span>')+'</td><td>'+new Date(u.criado_em).toLocaleDateString('pt-BR')+'</td><td>'+acoes+'</td></tr>';
+  }).join('');
+
+  tbody.querySelectorAll('.us-editar').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const nomeAtual = btn.dataset.nome;
+      const emailAtual = btn.dataset.email;
+
+      const novoNome = prompt('Nome:', nomeAtual);
+      if (novoNome === null) return; // cancelou
+      if (novoNome.trim() && novoNome.trim() !== nomeAtual) {
+        const { error: erroNome } = await supabaseClient.from('usuarios_perfil').update({ nome: novoNome.trim() }).eq('id', id);
+        if (erroNome) { alert('Erro ao editar nome: ' + erroNome.message); return; }
+      }
+
+      const novoEmail = prompt('E-mail de login (deixe igual se não quiser mudar):', emailAtual);
+      if (novoEmail === null) { carregarUsuarios(); return; } // cancelou só o e-mail, mas nome já foi salvo
+      if (novoEmail.trim() && novoEmail.trim().toLowerCase() !== emailAtual.toLowerCase()) {
+        const { data, error } = await supabaseClient.functions.invoke('editar-email', {
+          body: { user_id: id, novo_email: novoEmail.trim() }
+        });
+        if (error) {
+          let msg = error.message;
+          if (error.context && typeof error.context.json === 'function') {
+            try { const corpo = await error.context.json(); if (corpo && corpo.error) msg = corpo.error; } catch (e) {}
+          }
+          alert('Erro ao editar e-mail: ' + msg);
+        } else if (data && data.error) {
+          alert('Erro ao editar e-mail: ' + data.error);
+        }
+      }
+
+      carregarUsuarios();
+    });
+  });
+
+  tbody.querySelectorAll('.us-resetar').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const novaSenha = prompt('Nova senha (mínimo 6 caracteres):');
+      if (!novaSenha) return;
+      if (novaSenha.length < 6) { alert('A senha precisa ter pelo menos 6 caracteres.'); return; }
+
+      btn.disabled = true;
+      const { data, error } = await supabaseClient.functions.invoke('resetar-senha', {
+        body: { user_id: id, nova_senha: novaSenha }
+      });
+      btn.disabled = false;
+
+      if (error) {
+        let msg = error.message;
+        if (error.context && typeof error.context.json === 'function') {
+          try { const corpo = await error.context.json(); if (corpo && corpo.error) msg = corpo.error; } catch (e) {}
+        }
+        alert('Erro: ' + msg);
+        return;
+      }
+      if (data && data.error) { alert('Erro: ' + data.error); return; }
+      alert('Senha atualizada. Nova senha: ' + novaSenha);
+    });
+  });
+
+  tbody.querySelectorAll('.us-toggle').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const ativoAtual = btn.dataset.ativo === 'true';
+      const acao = ativoAtual ? 'inativar' : 'reativar';
+      if (!confirm('Quer mesmo ' + acao + ' este analista?')) return;
+      const { error: erroUpdate } = await supabaseClient.from('usuarios_perfil').update({ ativo: !ativoAtual }).eq('id', id);
+      if (erroUpdate) { alert('Erro: ' + erroUpdate.message); return; }
+      carregarUsuarios();
+    });
+  });
+}
+
+document.getElementById('us-btn-criar').addEventListener('click', async () => {
+  const nome = document.getElementById('us-nome').value.trim();
+  const statusDiv = document.getElementById('us-status');
+  const credDiv = document.getElementById('us-credenciais');
+  const btn = document.getElementById('us-btn-criar');
+
+  if (!nome) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Informe o nome.'; return; }
+  if (!tenantEfetivo) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Selecione um cliente no topo da tela.'; return; }
+
+  btn.disabled = true;
+  credDiv.style.display = 'none';
+  statusDiv.style.color = 'var(--text-secondary)';
+  statusDiv.textContent = 'Criando login...';
+
+  const papelEscolhido = usuarioAtual.papel === 'master' ? document.getElementById('us-papel').value : 'analista';
+
+  const { data, error } = await supabaseClient.functions.invoke('criar-analista', {
+    body: { nome, tenant_id: tenantEfetivo, papel: papelEscolhido }
+  });
+
+  btn.disabled = false;
+
+  if (error) {
+    let mensagemReal = error.message;
+    if (error.context && typeof error.context.json === 'function') {
+      try {
+        const corpo = await error.context.json();
+        if (corpo && corpo.error) {
+          mensagemReal = corpo.error;
+          if (corpo.debug_user_id) mensagemReal += ' | user_id: ' + corpo.debug_user_id;
+          if (corpo.debug_erro_query) mensagemReal += ' | detalhe: ' + corpo.debug_erro_query;
+        }
+      } catch (e) { /* mantém a mensagem genérica se não der pra ler */ }
+    }
+    statusDiv.style.color = 'var(--danger)';
+    statusDiv.textContent = 'Erro: ' + mensagemReal;
+    return;
+  }
+  if (data && data.error) {
+    let mensagemReal = data.error;
+    if (data.debug_user_id) mensagemReal += ' | user_id: ' + data.debug_user_id;
+    if (data.debug_erro_query) mensagemReal += ' | detalhe: ' + data.debug_erro_query;
+    statusDiv.style.color = 'var(--danger)';
+    statusDiv.textContent = 'Erro: ' + mensagemReal;
+    return;
+  }
+
+  statusDiv.textContent = '';
+  document.getElementById('us-cred-email').textContent = data.email;
+  document.getElementById('us-cred-senha').textContent = data.senha;
+  credDiv.style.display = 'block';
+  document.getElementById('us-nome').value = '';
+  carregarUsuarios();
+});
+
+// =====================================================
+// CONFIGURAÇÕES (dados do escritório/contrato por tenant)
+// =====================================================
+let logoBase64Atual = null; // guarda a logo carregada (base64) pra usar na geração de PDF
+
+// =====================================================
+// PUBLICAÇÕES (notícias do site público)
+// =====================================================
+async function carregarPublicacoes() {
+  const listaDiv = document.getElementById('pub-lista');
+  const { data, error } = await supabaseClient.from('publicacoes')
+    .select('*').eq('tenant_id', tenantEfetivo).order('criado_em', { ascending: false });
+
+  if (error) { listaDiv.innerHTML = '<div class="vazio">Erro ao carregar: ' + error.message + '</div>'; return; }
+  if (!data || !data.length) { listaDiv.innerHTML = '<div class="vazio">Nenhuma publicação ainda.</div>'; return; }
+
+  listaDiv.innerHTML = '<div class="tabela-wrap"><table><thead><tr><th>Título</th><th>Selo</th><th>Status</th><th>Criado em</th><th>Ações</th></tr></thead><tbody>'
+    + data.map(p => (
+      '<tr>'
+      + '<td>' + p.titulo + '</td>'
+      + '<td>' + p.badge + '</td>'
+      + '<td>' + (p.publicado ? '<span class="selo selo-verde">Publicado</span>' : '<span class="selo selo-laranja">Oculto</span>') + '</td>'
+      + '<td>' + new Date(p.criado_em).toLocaleDateString('pt-BR') + '</td>'
+      + '<td style="display:flex; gap:6px;">'
+        + '<button class="btn btn-secundario btn-sm" onclick="editarPublicacao(\'' + p.id + '\')">Editar</button>'
+        + '<button class="btn btn-secundario btn-sm" onclick="alternarPublicado(\'' + p.id + '\', ' + !p.publicado + ')">' + (p.publicado ? 'Ocultar' : 'Publicar') + '</button>'
+        + '<button class="btn btn-secundario btn-sm" style="color:var(--danger);" onclick="excluirPublicacao(\'' + p.id + '\')">Excluir</button>'
+      + '</td>'
+      + '</tr>'
+    )).join('')
+    + '</tbody></table></div>';
+}
+
+let publicacoesCache = [];
+let pubImagemProcessadaBlob = null;
+let pubImagemRemovida = false;
+
+// Corta e redimensiona a imagem escolhida pra caber exatamente no formato 4:3 usado nos cards do site
+function processarImagemPublicacao(arquivo) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const proporcaoAlvo = 4 / 3;
+        let sw = img.width, sh = img.height, sx = 0, sy = 0;
+        if (img.width / img.height > proporcaoAlvo) {
+          sw = img.height * proporcaoAlvo;
+          sx = (img.width - sw) / 2;
+        } else {
+          sh = img.width / proporcaoAlvo;
+          sy = (img.height - sh) / 2;
+        }
+        const larguraFinal = 800;
+        const alturaFinal = larguraFinal / proporcaoAlvo;
+        const canvas = document.createElement('canvas');
+        canvas.width = larguraFinal; canvas.height = alturaFinal;
+        canvas.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, larguraFinal, alturaFinal);
+        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.85);
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    leitor.onerror = reject;
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+document.getElementById('pub-imagem').addEventListener('change', async (e) => {
+  const arquivo = e.target.files[0];
+  const wrap = document.getElementById('pub-imagem-preview-wrap');
+  if (!arquivo) { pubImagemProcessadaBlob = null; wrap.style.display = 'none'; return; }
+  pubImagemProcessadaBlob = await processarImagemPublicacao(arquivo);
+  pubImagemRemovida = false;
+  document.getElementById('pub-imagem-preview').src = URL.createObjectURL(pubImagemProcessadaBlob);
+  wrap.style.display = 'block';
+});
+
+document.getElementById('pub-btn-remover-imagem').addEventListener('click', () => {
+  pubImagemProcessadaBlob = null;
+  pubImagemRemovida = true;
+  document.getElementById('pub-imagem').value = '';
+  document.getElementById('pub-imagem-preview-wrap').style.display = 'none';
+  document.getElementById('pub-imagem-preview').src = '';
+});
+
+document.getElementById('pub-imagem-colar').addEventListener('paste', async (e) => {
+  const itens = e.clipboardData ? e.clipboardData.items : [];
+  let arquivoImagem = null;
+  for (const item of itens) {
+    if (item.type.startsWith('image/')) { arquivoImagem = item.getAsFile(); break; }
+  }
+  const avisoDiv = document.getElementById('pub-imagem-colar');
+  if (!arquivoImagem) {
+    avisoDiv.textContent = '⚠️ Não encontrei nenhuma imagem no que foi colado. Copia a imagem (não o link) e tenta de novo.';
+    setTimeout(() => { avisoDiv.textContent = '📋 Ou clica aqui e cola (Ctrl+V) uma imagem copiada de qualquer lugar'; }, 3000);
+    return;
+  }
+  document.getElementById('pub-imagem').value = '';
+  pubImagemProcessadaBlob = await processarImagemPublicacao(arquivoImagem);
+  pubImagemRemovida = false;
+  document.getElementById('pub-imagem-preview').src = URL.createObjectURL(pubImagemProcessadaBlob);
+  document.getElementById('pub-imagem-preview-wrap').style.display = 'block';
+  avisoDiv.textContent = '✅ Imagem colada com sucesso!';
+  setTimeout(() => { avisoDiv.textContent = '📋 Ou clica aqui e cola (Ctrl+V) uma imagem copiada de qualquer lugar'; }, 2500);
+});
+
+async function salvarPublicacao() {
+  const idEditando = document.getElementById('pub-id-editando').value;
+  const titulo = document.getElementById('pub-titulo').value.trim();
+  const badge = document.getElementById('pub-badge').value.trim() || 'Notícia';
+  const conteudo = document.getElementById('pub-conteudo').value.trim();
+  const publicado = document.getElementById('pub-publicado').checked;
+  const statusDiv = document.getElementById('pub-status');
+
+  if (!titulo || !conteudo) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Preencha ao menos o título e o texto.'; return; }
+
+  statusDiv.style.color = 'var(--text-secondary)';
+  statusDiv.textContent = 'Salvando...';
+
+  let imagemPath = null;
+  if (idEditando && !pubImagemRemovida) {
+    const existente = publicacoesCache.find(p => p.id === idEditando);
+    imagemPath = existente ? existente.imagem_path : null;
+  }
+
+  if (pubImagemProcessadaBlob) {
+    const caminho = tenantEfetivo + '/' + crypto.randomUUID() + '.jpg';
+    const { error: erroUpload } = await supabaseClient.storage.from('publicacoes').upload(caminho, pubImagemProcessadaBlob, { upsert: false, contentType: 'image/jpeg' });
+    if (erroUpload) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Erro ao subir imagem: ' + erroUpload.message; return; }
+    imagemPath = caminho;
+  }
+
+  const dados = { tenant_id: tenantEfetivo, titulo, badge, conteudo, publicado, imagem_path: imagemPath };
+
+  let erro;
+  if (idEditando) {
+    ({ error: erro } = await supabaseClient.from('publicacoes').update(dados).eq('id', idEditando));
+  } else {
+    dados.criado_por = usuarioAtual.id;
+    ({ error: erro } = await supabaseClient.from('publicacoes').insert(dados));
+  }
+
+  if (erro) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Erro ao salvar: ' + erro.message; return; }
+
+  statusDiv.style.color = 'var(--success)';
+  statusDiv.textContent = 'Publicação salva!';
+  limparFormPublicacao();
+  carregarPublicacoes();
+}
+
+function limparFormPublicacao() {
+  document.getElementById('pub-id-editando').value = '';
+  document.getElementById('pub-titulo').value = '';
+  document.getElementById('pub-badge').value = 'Notícia';
+  document.getElementById('pub-conteudo').value = '';
+  document.getElementById('pub-publicado').checked = true;
+  document.getElementById('pub-imagem').value = '';
+  document.getElementById('pub-imagem-preview-wrap').style.display = 'none';
+  pubImagemProcessadaBlob = null;
+  pubImagemRemovida = false;
+  document.getElementById('pub-form-titulo').textContent = 'Nova publicação';
+  document.getElementById('pub-btn-cancelar').style.display = 'none';
+}
+
+async function editarPublicacao(id) {
+  const { data } = await supabaseClient.from('publicacoes').select('*').eq('id', id).single();
+  if (!data) return;
+  publicacoesCache = publicacoesCache.filter(p => p.id !== id).concat([data]);
+  document.getElementById('pub-id-editando').value = data.id;
+  document.getElementById('pub-titulo').value = data.titulo;
+  document.getElementById('pub-badge').value = data.badge;
+  document.getElementById('pub-conteudo').value = data.conteudo;
+  document.getElementById('pub-publicado').checked = data.publicado;
+  pubImagemProcessadaBlob = null; // só troca se ela escolher um arquivo novo
+  pubImagemRemovida = false;
+  const wrap = document.getElementById('pub-imagem-preview-wrap');
+  if (data.imagem_path) {
+    document.getElementById('pub-imagem-preview').src = SUPABASE_URL + '/storage/v1/object/public/publicacoes/' + data.imagem_path;
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+  document.getElementById('pub-form-titulo').textContent = 'Editando publicação';
+  document.getElementById('pub-btn-cancelar').style.display = 'inline-block';
+  document.getElementById('view-publicacoes').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function alternarPublicado(id, novoValor) {
+  await supabaseClient.from('publicacoes').update({ publicado: novoValor }).eq('id', id);
+  carregarPublicacoes();
+}
+
+async function excluirPublicacao(id) {
+  if (!confirm('Excluir essa publicação? Isso não pode ser desfeito.')) return;
+  await supabaseClient.from('publicacoes').delete().eq('id', id);
+  carregarPublicacoes();
+}
+
+document.getElementById('pub-btn-salvar').addEventListener('click', salvarPublicacao);
+document.getElementById('pub-btn-cancelar').addEventListener('click', limparFormPublicacao);
+
+async function carregarConfiguracoes() {
+
+  if (!tenantEfetivo) return;
+  const { data, error } = await supabaseClient.from('configuracao_contrato').select('*').eq('tenant_id', tenantEfetivo).maybeSingle();
+  const statusDiv = document.getElementById('cf-status');
+  if (error) { statusDiv.style.color = 'var(--danger)'; statusDiv.textContent = 'Erro ao carregar: ' + error.message; return; }
+
+  const c = data || {};
+  document.getElementById('cf-nome-escritorio').value = c.nome_escritorio || '';
+  document.getElementById('cf-oab-escritorio').value = c.oab_escritorio || '';
+  document.getElementById('cf-cnpj').value = c.cnpj || '';
+  document.getElementById('cf-telefone').value = c.telefone || '';
+  document.getElementById('cf-email').value = c.email || '';
+  document.getElementById('cf-endereco').value = c.endereco || '';
+  document.getElementById('cf-nome-advogado').value = c.nome_advogado || '';
+  document.getElementById('cf-cidade-assinatura').value = c.cidade_assinatura || '';
+  document.getElementById('cf-qualificacao-advogado').value = c.qualificacao_advogado || '';
+  document.getElementById('cf-zapsign-token').value = c.zapsign_api_token || '';
+  document.getElementById('cf-resend-key').value = c.resend_api_key || '';
+  document.getElementById('cf-email-remetente').value = c.email_remetente || '';
+  document.getElementById('cf-clausula-honorarios').value = c.clausula_honorarios || 'CLÁUSULA 4ª: Pelos serviços contratados, a CONTRATANTE pagará à CONTRATADA, a título de honorários advocatícios, o valor equivalente a 30% (trinta por cento) dos atrasados levantados no processo, bem como o valor correspondente aos 03 primeiros benefícios integrais, quando da concessão deste benefício.';
+  document.getElementById('cf-logo-alinhamento').value = c.logo_alinhamento || 'centro';
+
+  const previewDiv = document.getElementById('cf-logo-preview');
+  logoBase64Atual = null;
+  if (c.logo_path) {
+    const { data: urlData } = supabaseClient.storage.from('logos-escritorio').getPublicUrl(c.logo_path);
+    previewDiv.innerHTML = '<img src="' + urlData.publicUrl + '" style="max-height:80px; border:1px solid var(--border); border-radius:8px; padding:6px;">';
+  } else {
+    previewDiv.innerHTML = '<span style="color:var(--text-secondary); font-size:13px;">Nenhuma logo cadastrada ainda.</span>';
+  }
+  statusDiv.textContent = '';
+}
+
+document.getElementById('cf-btn-salvar').addEventListener('click', async () => {
+  const statusDiv = document.getElementById('cf-status');
+  const btn = document.getElementById('cf-btn-salvar');
+  if (!tenantEfetivo) { statusDiv.style.color='var(--danger)'; statusDiv.textContent='Selecione um cliente.'; return; }
+
+  btn.disabled = true;
+  statusDiv.style.color = 'var(--text-secondary)';
+  statusDiv.textContent = 'Salvando...';
+
+  try {
+    let logoPath = null;
+    const arquivoLogo = document.getElementById('cf-logo-arquivo').files[0];
+    if (arquivoLogo) {
+      const nomeArquivo = tenantEfetivo + '/logo_' + Date.now() + '.' + (arquivoLogo.name.split('.').pop() || 'png');
+      const { error: erroUpload } = await supabaseClient.storage.from('logos-escritorio').upload(nomeArquivo, arquivoLogo, { upsert: true });
+      if (erroUpload) throw erroUpload;
+      logoPath = nomeArquivo;
+    }
+
+    const payload = {
+      tenant_id: tenantEfetivo,
+      nome_escritorio: document.getElementById('cf-nome-escritorio').value.trim(),
+      oab_escritorio: document.getElementById('cf-oab-escritorio').value.trim(),
+      cnpj: document.getElementById('cf-cnpj').value.trim(),
+      telefone: document.getElementById('cf-telefone').value.trim(),
+      email: document.getElementById('cf-email').value.trim(),
+      endereco: document.getElementById('cf-endereco').value.trim(),
+      nome_advogado: document.getElementById('cf-nome-advogado').value.trim(),
+      cidade_assinatura: document.getElementById('cf-cidade-assinatura').value.trim(),
+      qualificacao_advogado: document.getElementById('cf-qualificacao-advogado').value.trim(),
+      zapsign_api_token: document.getElementById('cf-zapsign-token').value.trim(),
+      resend_api_key: document.getElementById('cf-resend-key').value.trim(),
+      email_remetente: document.getElementById('cf-email-remetente').value.trim(),
+      clausula_honorarios: document.getElementById('cf-clausula-honorarios').value.trim(),
+      logo_alinhamento: document.getElementById('cf-logo-alinhamento').value,
+      atualizado_em: new Date().toISOString()
+    };
+    if (logoPath) payload.logo_path = logoPath;
+
+    const { error: erroSalvar } = await supabaseClient.from('configuracao_contrato').upsert(payload, { onConflict: 'tenant_id' });
+    if (erroSalvar) throw erroSalvar;
+
+    statusDiv.style.color = 'var(--success)';
+    statusDiv.textContent = 'Configurações salvas com sucesso.';
+    document.getElementById('cf-logo-arquivo').value = '';
+    carregarConfiguracoes();
+  } catch (err) {
+    statusDiv.style.color = 'var(--danger)';
+    statusDiv.textContent = 'Erro: ' + (err.message || JSON.stringify(err));
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// =====================================================
+// GERAÇÃO DE DOCUMENTOS JURÍDICOS (Ficha / Capa / Contrato / Relatório)
+// Mesma lógica/textos legais usados na Praty — só os dados do escritório
+// (nome, OAB, CNPJ, endereço, cláusula de honorários, logo) vêm do banco,
+// por tenant, em vez de ficarem fixos no código.
+// =====================================================
+const CAMPOS_FICHA = [
+  { id: 'rg', label: 'RG' },
+  { id: 'estado_civil', label: 'Estado civil', tipo: 'select', opcoes: ['Solteiro(a)','Casado(a)','Divorciado(a)','Viúvo(a)','União estável'] },
+  { id: 'nacionalidade', label: 'Nacionalidade' },
+  { id: 'profissao', label: 'Profissão', auto: 'profissao' },
+  { id: 'endereco', label: 'Endereço completo', full: true },
+  { id: 'email', label: 'E-mail', auto: 'email' }
+];
+
+const CAMPOS_TEMPLATE = {
+  capa: [
+    { id: 'analista', label: 'Analista responsável', auto: 'analista' },
+    { id: 'data', label: 'Data', auto: 'hoje' },
+    { id: 'lesao', label: 'Lesão', auto: 'lesao' },
+    { id: 'prontuario_ficha', label: 'Prontuário ou Ficha de Atend.', tipo: 'select', opcoes: ['Prontuário','Ficha de Atendimento'] },
+    { id: 'hospitais', label: 'Hospital(is) de tratamento', full: true, auto: 'hospitais' },
+    { id: 'tipo_beneficio', label: 'Tipo de benefício (ex: Auxílio-Acidente INSS)' },
+    { id: 'cat', label: 'CAT', auto: 'cat' },
+    { id: 'login_inss', label: 'Login do Meu INSS' },
+    { id: 'observacao', label: 'Observação', tipo: 'textarea', full: true }
+  ],
+  relatorio: [
+    { id: 'telefone_recado', label: 'Telefone (recado)', auto: 'telefone' },
+    { id: 'data_acidente', label: 'Data do acidente', auto: 'data_acidente' },
+    { id: 'periodo_afastamento', label: 'Período de afastamento no INSS' },
+    { id: 'acidente_trabalho', label: 'Foi acidente de trabalho?', tipo: 'select', opcoes: ['Sim','Não'] },
+    { id: 'profissao_epoca', label: 'Profissão na época do acidente' },
+    { id: 'atividades_epoca', label: 'Descrever as atividades desenvolvidas na época do acidente', tipo: 'textarea', full: true },
+    { id: 'como_ocorreu', label: 'Descrever como ocorreu o acidente', tipo: 'textarea', full: true },
+    { id: 'limitacoes', label: 'Descrever as limitações deixadas pelo acidente', tipo: 'textarea', full: true },
+    { id: 'membro_dominante', label: 'Membro Dominante (destro ou canhoto)' }
+  ]
+};
+
+// Aplica os valores automáticos (só quando o campo ainda estiver vazio) — mesma lógica da Praty
+function aplicarAutoPreenchimento(campos, valores, lead) {
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  campos.forEach(c => {
+    if (!c.auto || valores[c.id]) return;
+    if (c.auto === 'email') valores[c.id] = lead?.email || '';
+    if (c.auto === 'profissao') valores[c.id] = lead?.cbo || '';
+    if (c.auto === 'analista') valores[c.id] = usuarioAtual.nome || '';
+    if (c.auto === 'hoje') valores[c.id] = hoje;
+    if (c.auto === 'lesao') valores[c.id] = lead?.natureza_lesao || '';
+    if (c.auto === 'hospitais') valores[c.id] = lead?.unidade_hospital || '';
+    if (c.auto === 'cat') valores[c.id] = lead?.numero_cat || '';
+    if (c.auto === 'telefone') valores[c.id] = lead?.telefone_1 || '';
+    if (c.auto === 'data_acidente') valores[c.id] = lead?.data_acidente || '';
+  });
+  return valores;
+}
+
+// Poderes de procuração — texto padrão jurídico, igual em qualquer escritório (sem dado específico dentro)
+const PODERES_ET_EXTRA = 'PODERES: outorgando-lhes amplos poderes para o foro em geral, com cláusula et extra, em qualquer Juízo, Instância, Tribunal ou Autarquia (lei 8906/94, art. 5º), podendo propor contra quem de direito as ações competentes e defendê-las nas contrárias, seguindo umas e outras, até final decisão, usando os recursos legais e acompanhando-os, conferindo-lhes ainda, poderes especiais para confessar, desistir, transigir, firmar compromissos ou acordos, agindo em conjunto ou separadamente, podendo ainda substabelecer está em outrem, com ou sem reservas de iguais poderes, dando tudo por bom, firme e valioso. FINALIDADE: especialmente para representá-lo perante o INSS – Instituto Nacional do Seguro Social para ingressar com processos administrativos, requerer e obter documentos e senhas de acesso, inclusive no Portal meu.inss.gov.br, requerer o Pecúlio, cópias do processo de auxilio acidente, certidões, C.N.I.S., Relação dos Salários de Contribuição, cópias de CONBAS e CONCAL, agendar e fazer acertos de contribuições e vínculos, informações e o que mais preciso for para defender os interesses do Outorgante.';
+const PODERES_AD_JUDICIA = 'PODERES: outorgando-lhes amplos poderes, inerentes ao bom e fiel cumprimento deste mandato, bem como para o foro em geral, conforme estabelecido no artigo 105 do Código de Processo Civil vigente, e os especiais para transigir, fazer acordo, firmar compromisso, substabelecer, renunciar, desistir, reconhecer a procedência do pedido, receber intimações, receber e dar quitação, praticar todos atos perante repartições públicas Federais, Estaduais e Municipais, e órgãos da administração pública direta e indireta, praticar quaisquer atos perante particulares ou empresas privadas, recorrer a quaisquer instâncias e tribunais, em especial para ação de CONCESSÃO DE BENEFÍCIO EM FACE DO INSS.';
+
+const CLAUSULAS_PADRAO = [
+  'CLÁUSULA 1ª: A CONTRATANTE contrata os serviços da CONTRATADA para representá-la na AÇÃO PREVIDENCIÁRIA, conforme poderes concedidos através da assinatura da procuração.',
+  'CLÁUSULA 2ª: O presente contrato tem validade até o final da ação/procedimento e, inclui a defesa dos interesses da parte CONTRATANTE em todas as instâncias administrativas e/ou judiciais até a data do recebimento, se for o caso.',
+  'CLÁUSULA 3ª: A CONTRATANTE se responsabiliza a fornecer à CONTRATADA, no prazo de 48 horas, todos os documentos solicitados para o bom andamento da ação, bem como, comparecer nas perícias agendadas.',
+  '__CLAUSULA_HONORARIOS__', // substituída pelo texto configurado por tenant
+  '§ 1° A CONTRATADA efetuará os cálculos dos atrasados por meio de um perito especializado em cálculos, sem qualquer custo extra.',
+  '§ 2º.: Sem prejuízo ao disposto acima, em caso de concessão de liminar/antecipação de tutela ou implantação do benefício por qualquer motivo, será devido pela CONTRATANTE, apenas o montante de 30% (trinta por cento) sob o valor recebido mensalmente, até a efetiva inscrição do RPV/Precatório no Tribunal.',
+  '§ 3º.: Se o pagamento acordado não for realizado conforme o estabelecido, o presente contrato poderá ser executado, incidindo multa de 2%, juros e correção monetária.',
+  'CLÁUSULA 5ª: Caso a CONTRATANTE celebre acordo judicial/extrajudicial, pagará a título de honorários, o valor equivalente ao disposto na cláusula 4°.',
+  'CLÁUSULA 6ª: No caso de não comparecimento na perícia médica agendada, sem justificativa legal, o CONTRATANTE pagará à CONTRATADA uma multa no valor de 2 (dois salários) mínimos. Além disso, sem prejuízo do disposto acima, o CONTRATANTE arcará com os honorários de sucumbência advindos do processo.'
+];
+
+const DOCUMENTOS_ANEXOS_PADRAO = [
+  { titulo: 'DECLARAÇÃO DE HIPOSSUFICIÊNCIA', assinaCliente: true,
+    paragrafos: (q) => [`${q}. DECLARO, para todos os fins de direito e sob as penas da lei, que não tenho condições de arcar com as despesas inerentes ao presente processo, sem prejuízo do meu sustento e de minha família, necessitando, portanto, da Gratuidade da Justiça, nos termos do art. 98 e seguintes da Lei 13.105/2015 (Código de Processo Civil). Requeiro, ainda, que o benefício abranja a todos os atos do processo.`] },
+  { titulo: 'PROCURAÇÃO "ET EXTRA"', assinaCliente: true,
+    paragrafos: (q, cfg) => [`OUTORGANTE: ${q}.`, cfg.blocoOutorgado, PODERES_ET_EXTRA] },
+  { titulo: 'PROCURAÇÃO "AD JUDICIA"', assinaCliente: true,
+    paragrafos: (q, cfg) => [`OUTORGANTE: ${q}.`, cfg.blocoOutorgado, PODERES_AD_JUDICIA] },
+  { titulo: 'DECLARAÇÃO DE RESPONSABILIDADE', assinaCliente: true,
+    paragrafos: (q) => [`${q}, venho por meio deste documento informar que me responsabilizo por quaisquer penalidades referente à desídia ou omissão no envio de documentos e informações necessárias para o prosseguimento da ação. Por ser verdade firmo a presente declaração.`] },
+  { titulo: 'DECLARAÇÃO DE INEXISTÊNCIA DE AÇÃO', assinaCliente: true,
+    paragrafos: (q) => [`${q}, DECLARO, para os devidos fins, não possuir nenhuma outra ação em trâmite com o mesmo objeto desta demanda, tampouco ter constituído outro(a) advogado(a) para tratar do mesmo assunto.`] }
+];
+
+function textoQualificacaoCliente(lead, ficha) {
+  return (lead?.nome || '') + ', ' + (ficha.nacionalidade || 'brasileiro(a)') + ', ' + (ficha.estado_civil || '').toLowerCase()
+    + ', ' + (ficha.profissao || '') + ', portador(a) da cédula de identidade nº ' + (ficha.rg || '')
+    + ', inscrito(a) no CPF sob o nº ' + (lead?.cpf || '') + ', residente e domiciliado(a) em ' + (ficha.endereco || '')
+    + ', telefone ' + (lead?.telefone_1 || '') + (ficha.email ? ', e-mail ' + ficha.email : '');
+}
+
+async function carregarConfigTenantAtual() {
+  const { data } = await supabaseClient.from('configuracao_contrato').select('*').eq('tenant_id', tenantEfetivo).maybeSingle();
+  return data || {};
+}
+
+async function carregarLogoBase64(logoPath) {
+  if (!logoPath) return null;
+  const { data: urlData } = supabaseClient.storage.from('logos-escritorio').getPublicUrl(logoPath);
+  try {
+    const resp = await fetch(urlData.publicUrl);
+    const blob = await resp.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) { return null; }
+}
+
+function baixarPdfBlob(blob, nomeArquivo) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nomeArquivo;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---------- Modal genérico (Ficha / Capa / Relatório) ----------
+let contextoModalDoc = null; // { modo: 'ficha'|'capa'|'relatorio', lead, campos }
+
+function montarCamposModal(campos, valoresIniciais) {
+  const container = document.getElementById('modal-gerar-doc-campos');
+  container.innerHTML = campos.map(c => {
+    const valor = (valoresIniciais[c.id] || '').toString();
+    let campoHtml;
+    if (c.tipo === 'textarea') campoHtml = '<textarea data-campo="'+c.id+'">'+valor+'</textarea>';
+    else if (c.tipo === 'select') {
+      const opts = c.opcoes.map(o => '<option value="'+o+'"'+(o===valor?' selected':'')+'>'+o+'</option>').join('');
+      campoHtml = '<select data-campo="'+c.id+'"><option value="">Selecione...</option>'+opts+'</select>';
+    } else campoHtml = '<input type="text" data-campo="'+c.id+'" value="'+valor.replace(/"/g,'&quot;')+'">';
+    return '<div class="modal-field" style="'+(c.full?'grid-column:1 / -1;':'')+'"><label>'+c.label+'</label>'+campoHtml+'</div>';
+  }).join('');
+}
+
+function lerCamposModal(campos) {
+  const valores = {};
+  campos.forEach(c => { valores[c.id] = (document.querySelector('[data-campo="'+c.id+'"]') || {}).value || ''; });
+  return valores;
+}
+
+function fecharModalDoc() {
+  document.getElementById('modal-gerar-doc').style.display = 'none';
+  contextoModalDoc = null;
+}
+
+document.getElementById('modal-gerar-doc-cancelar').addEventListener('click', fecharModalDoc);
+
+async function abrirModalFicha(lead) {
+  const { data: fichaAtual } = await supabaseClient.from('fichas_cliente').select('*').eq('lead_id', lead.id).maybeSingle();
+  contextoModalDoc = { modo: 'ficha', lead, campos: CAMPOS_FICHA };
+  document.getElementById('modal-gerar-doc-titulo').textContent = 'Ficha do cliente — ' + (lead.nome || '');
+  document.getElementById('modal-gerar-doc-confirmar').textContent = 'Salvar ficha';
+  document.getElementById('modal-gerar-doc-status').textContent = '';
+  const valoresIniciais = aplicarAutoPreenchimento(CAMPOS_FICHA, Object.assign({ nacionalidade: 'brasileiro(a)' }, fichaAtual || {}), lead);
+  montarCamposModal(CAMPOS_FICHA, valoresIniciais);
+  document.getElementById('modal-gerar-doc').style.display = 'flex';
+}
+
+async function abrirModalDocumento(tipoSlug, titulo, lead) {
+  const { data: fichaAtual } = await supabaseClient.from('fichas_cliente').select('*').eq('lead_id', lead.id).maybeSingle();
+  if (!fichaAtual || !fichaAtual.rg || !fichaAtual.estado_civil || !fichaAtual.profissao || !fichaAtual.endereco) {
+    alert('Preencha a Ficha do cliente primeiro (RG, estado civil, profissão e endereço são obrigatórios).');
+    return;
+  }
+  const { data: dadosAtuais } = await supabaseClient.from('dados_documento').select('valores').eq('lead_id', lead.id).eq('tipo_slug', tipoSlug).maybeSingle();
+  contextoModalDoc = { modo: tipoSlug, lead, campos: CAMPOS_TEMPLATE[tipoSlug], ficha: fichaAtual };
+  document.getElementById('modal-gerar-doc-titulo').textContent = titulo + ' — ' + (lead.nome || '');
+  document.getElementById('modal-gerar-doc-confirmar').textContent = 'Salvar e gerar PDF';
+  document.getElementById('modal-gerar-doc-status').textContent = '';
+  const valoresIniciais = aplicarAutoPreenchimento(CAMPOS_TEMPLATE[tipoSlug], Object.assign({}, (dadosAtuais && dadosAtuais.valores) || {}), lead);
+  montarCamposModal(CAMPOS_TEMPLATE[tipoSlug], valoresIniciais);
+  document.getElementById('modal-gerar-doc').style.display = 'flex';
+}
+
+document.getElementById('modal-gerar-doc-confirmar').addEventListener('click', async () => {
+  if (!contextoModalDoc) return;
+  const statusDiv = document.getElementById('modal-gerar-doc-status');
+  const btn = document.getElementById('modal-gerar-doc-confirmar');
+  btn.disabled = true;
+  statusDiv.style.color = 'var(--text-secondary)';
+  statusDiv.textContent = 'Salvando...';
+
+  try {
+    const valores = lerCamposModal(contextoModalDoc.campos);
+
+    if (contextoModalDoc.modo === 'ficha') {
+      const { error } = await supabaseClient.from('fichas_cliente').upsert(
+        Object.assign({ lead_id: contextoModalDoc.lead.id, tenant_id: tenantEfetivo, atualizado_por: usuarioAtual.id, atualizado_em: new Date().toISOString() }, valores),
+        { onConflict: 'lead_id' }
+      );
+      if (error) throw error;
+      statusDiv.style.color = 'var(--success)';
+      statusDiv.textContent = 'Ficha salva.';
+      setTimeout(fecharModalDoc, 700);
+      return;
+    }
+
+    // Capa ou Relatório: salva os campos e gera o PDF
+    const { error: erroSalvar } = await supabaseClient.from('dados_documento').upsert(
+      { lead_id: contextoModalDoc.lead.id, tipo_slug: contextoModalDoc.modo, valores, atualizado_em: new Date().toISOString() },
+      { onConflict: 'lead_id,tipo_slug' }
+    );
+    if (erroSalvar) throw erroSalvar;
+
+    const config = await carregarConfigTenantAtual();
+    const blob = gerarPdfTemplate(contextoModalDoc.modo, contextoModalDoc.modo === 'capa' ? 'Capa' : 'Relatório', contextoModalDoc.ficha, valores, contextoModalDoc.lead, config.nome_escritorio);
+    baixarPdfBlob(blob, contextoModalDoc.modo + '_' + (contextoModalDoc.lead.nome || 'lead').replace(/\s+/g,'_') + '.pdf');
+    salvarDocumentoNaPasta(contextoModalDoc.lead.id, contextoModalDoc.modo, blob);
+
+    statusDiv.style.color = 'var(--success)';
+    statusDiv.textContent = 'PDF gerado e baixado.';
+    setTimeout(fecharModalDoc, 900);
+  } catch (err) {
+    statusDiv.style.color = 'var(--danger)';
+    statusDiv.textContent = 'Erro: ' + (err.message || JSON.stringify(err));
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// ---------- Geração da Capa / Relatório (ficha + campos específicos) ----------
+function cabecalhoGenerico(pdf, margem, nomeEscritorio) {
+  let y = 24;
+  pdf.setFont('helvetica', 'bold'); pdf.setFontSize(16);
+  pdf.text((nomeEscritorio || 'CATFlow').toUpperCase(), margem, y);
+  pdf.setDrawColor(15, 92, 76); pdf.setLineWidth(0.6);
+  pdf.line(margem, y + 6, 210 - margem, y + 6);
+  return y + 19;
+}
+
+function gerarPdfTemplate(tipoSlug, titulo, ficha, valoresDoc, lead, nomeEscritorio) {
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
+  const margem = 20;
+  const largura = 210 - margem * 2;
+  let y = cabecalhoGenerico(pdf, margem, nomeEscritorio);
+
+  pdf.setFontSize(14); pdf.setFont('helvetica', 'bold');
+  pdf.text(titulo.toUpperCase(), margem, y);
+  y += 12;
+  pdf.setFontSize(11);
+
+  const escreverLinha = (label, valor, textarea) => {
+    if (y > 270) { pdf.addPage(); y = 20; }
+    pdf.setFont('helvetica', 'bold');
+    const rotulo = label + ':';
+    pdf.text(rotulo, margem, y);
+    pdf.setFont('helvetica', 'normal');
+    const linhas = pdf.splitTextToSize((valor || '—').toString(), largura);
+    const larguraRotulo = pdf.getTextWidth(rotulo);
+    const cabeNaMesmaLinha = !textarea && (margem + larguraRotulo + 4 + pdf.getTextWidth(linhas[0] || '—') <= margem + largura);
+    if (textarea || !cabeNaMesmaLinha) {
+      y += 6;
+      linhas.forEach(l => { if (y > 280) { pdf.addPage(); y = 20; } pdf.text(l, margem, y); y += 5.5; });
+      y += 4;
+    } else {
+      pdf.text(linhas[0] || '—', margem + larguraRotulo + 4, y);
+      y += 8;
+    }
+  };
+
+  escreverLinha('Nome completo', lead?.nome);
+  escreverLinha('CPF', lead?.cpf);
+  if (ficha.rg) escreverLinha('RG', ficha.rg);
+  if (ficha.endereco) escreverLinha('Endereço', ficha.endereco, true);
+  if (ficha.profissao) escreverLinha('Profissão', ficha.profissao);
+
+  CAMPOS_TEMPLATE[tipoSlug].forEach(c => escreverLinha(c.label, valoresDoc[c.id], c.tipo === 'textarea'));
+
+  pdf.setFontSize(8.5); pdf.setTextColor(150);
+  const totalPaginas = pdf.internal.getNumberOfPages();
+  pdf.setPage(totalPaginas);
+  pdf.text('Documento gerado pelo sistema CATFlow em ' + new Date().toLocaleDateString('pt-BR') + '.', margem, 290);
+
+  return pdf.output('blob');
+}
+
+// ---------- Geração do Contrato completo (contrato + 5 anexos + logo/rodapé) ----------
+async function gerarContratoCompleto(lead) {
+  const { data: fichaAtual } = await supabaseClient.from('fichas_cliente').select('*').eq('lead_id', lead.id).maybeSingle();
+  if (!fichaAtual || !fichaAtual.rg || !fichaAtual.estado_civil || !fichaAtual.profissao || !fichaAtual.endereco) {
+    alert('Preencha a Ficha do cliente primeiro (RG, estado civil, profissão e endereço são obrigatórios).');
+    return;
+  }
+  const config = await carregarConfigTenantAtual();
+  if (!config.nome_escritorio || !config.oab_escritorio || !config.nome_advogado) {
+    alert('Preencha os dados do escritório na tela Configurações antes de gerar o contrato.');
+    return;
+  }
+
+  const logoBase64 = await carregarLogoBase64(config.logo_path);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
+  const margem = 20;
+  const largura = 210 - margem * 2;
+
+  const trechoCnpj = config.cnpj ? (' e no CNPJ/MF nº ' + config.cnpj) : '';
+  const cfg = {
+    blocoContratado: 'CONTRATADA: ' + config.nome_escritorio + ', escritório de advocacia, inscrito na ' + config.oab_escritorio + trechoCnpj + ', estabelecido em ' + (config.endereco || '') + ', neste ato, representada por ' + config.nome_advogado + ', ' + (config.qualificacao_advogado || ''),
+    blocoOutorgado: 'OUTORGADO: ' + config.nome_escritorio + ', escritório de advocacia, inscrito na ' + config.oab_escritorio + trechoCnpj + ', neste ato representado por ' + config.nome_advogado + ', com escritório localizado em ' + (config.endereco || '') + (config.telefone ? ', Tel. ' + config.telefone : '') + (config.email ? ', e-mail: ' + config.email : ''),
+    nomeAssinatura: config.nome_escritorio,
+    oabCnpjAssinatura: config.oab_escritorio + (config.cnpj ? ' — CNPJ/MF nº ' + config.cnpj : ''),
+    representanteNome: config.nome_advogado,
+    cidadeAssinatura: config.cidade_assinatura || '',
+    rodape: [config.endereco || '', (config.telefone ? 'Tel. ' + config.telefone : '') + (config.email ? ' - e-mail: ' + config.email : '')].filter(Boolean)
+  };
+  const clausulas = CLAUSULAS_PADRAO.map(c => c === '__CLAUSULA_HONORARIOS__' ? (config.clausula_honorarios || '') : c);
+
+  const alturaLogoReal = (() => {
+    if (!logoBase64) return 0;
+    try {
+      const imgProps = pdf.getImageProperties(logoBase64);
+      return (imgProps.height / imgProps.width) * 26; // 26mm é a largura fixa usada no desenho da logo
+    } catch (e) { return 20; }
+  })();
+  const alturaLogoCabecalho = logoBase64 ? alturaLogoReal + 6 : 0; // +6mm de respiro entre a logo e o texto
+  const topoConteudo = 15 + alturaLogoCabecalho;
+  const fimConteudo = 275;
+  let y = topoConteudo;
+
+  const novaPagina = () => { pdf.addPage(); y = topoConteudo; };
+  const escreverParagrafo = (texto, negrito) => {
+    pdf.setFontSize(10.5); pdf.setFont('helvetica', negrito ? 'bold' : 'normal');
+    const linhas = pdf.splitTextToSize(texto, largura);
+    linhas.forEach((l, idx) => {
+      if (y > fimConteudo) novaPagina();
+      const ehUltimaLinha = idx === linhas.length - 1;
+      if (ehUltimaLinha) pdf.text(l, margem, y);
+      else pdf.text(l, margem, y, { align: 'justify', maxWidth: largura });
+      y += 5.3;
+    });
+    y += 4;
+  };
+  const escreverLinhasColuna = (texto, x, yInicial, larguraColuna) => {
+    const linhas = pdf.splitTextToSize(texto || '', larguraColuna);
+    let yAtual = yInicial;
+    linhas.forEach(l => { pdf.text(l, x, yAtual); yAtual += 5.5; });
+    return yAtual;
+  };
+  const escreverTitulo = (titulo) => {
+    const alturaCaixa = 9;
+    pdf.setDrawColor(0); pdf.setLineWidth(0.3);
+    pdf.rect(margem, y - alturaCaixa + 2.5, largura, alturaCaixa);
+    pdf.setFontSize(11); pdf.setFont('helvetica', 'bold');
+    pdf.text(titulo, 105, y, { align: 'center', maxWidth: largura - 6 });
+    y += 14;
+  };
+
+  const qualificacaoCliente = textoQualificacaoCliente(lead, fichaAtual);
+
+  escreverTitulo('CONTRATO DE PRESTAÇÃO DE SERVIÇOS ADVOCATÍCIOS');
+  escreverParagrafo('CONTRATANTE: ' + qualificacaoCliente + '.', true);
+  escreverParagrafo(cfg.blocoContratado, true);
+  clausulas.forEach(c => escreverParagrafo(c, false));
+  escreverParagrafo('E por estarem de pleno acordo com o aqui estipulado, as partes firmam o presente instrumento, com o conhecimento de duas testemunhas, conforme prevê o Estatuto da Advocacia, para que possa produzir todos os seus efeitos de direito.', false);
+
+  y += 6;
+  if (y + 54 > fimConteudo) novaPagina();
+  pdf.setFont('helvetica', 'normal'); pdf.setFontSize(10.5);
+  pdf.text(cfg.cidadeAssinatura + ', ' + new Date().toLocaleDateString('pt-BR') + '.', margem, y); y += 12;
+
+  const colEsq = margem, colDir = margem + largura / 2 + 6, colLargura = largura / 2 - 6;
+  let yEsq = y, yDir = y;
+  pdf.setFont('helvetica', 'bold'); pdf.text('CONTRATANTE:', colEsq, yEsq); yEsq += 6;
+  pdf.setFont('helvetica', 'normal'); pdf.text('_'.repeat(30), colEsq, yEsq); yEsq += 5.5;
+  yEsq = escreverLinhasColuna(lead?.nome || '', colEsq, yEsq, colLargura);
+  pdf.text('CPF: ' + (lead?.cpf || ''), colEsq, yEsq);
+
+  pdf.setFont('helvetica', 'bold'); pdf.text('CONTRATADA:', colDir, yDir); yDir += 6;
+  pdf.setFont('helvetica', 'normal'); pdf.text('_'.repeat(30), colDir, yDir); yDir += 5.5;
+  yDir = escreverLinhasColuna(cfg.nomeAssinatura, colDir, yDir, colLargura);
+  escreverLinhasColuna(cfg.oabCnpjAssinatura, colDir, yDir, colLargura);
+
+  // Anexos (Declaração de hipossuficiência, Procurações, etc.)
+  DOCUMENTOS_ANEXOS_PADRAO.forEach(doc => {
+    novaPagina();
+    escreverTitulo(doc.titulo);
+    doc.paragrafos(qualificacaoCliente, cfg).forEach(p => escreverParagrafo(p, false));
+    y += 10;
+    if (y > fimConteudo - 30) novaPagina();
+    pdf.setFont('helvetica', 'normal'); pdf.setFontSize(10.5);
+    pdf.text(cfg.cidadeAssinatura + ', ' + new Date().toLocaleDateString('pt-BR') + '.', margem, y); y += 14;
+    if (doc.assinaCliente) {
+      pdf.text('_'.repeat(45), margem, y); y += 5.5;
+      pdf.text(lead?.nome || '', margem, y); y += 5.5;
+      pdf.text('CPF: ' + (lead?.cpf || ''), margem, y);
+    } else {
+      pdf.text('_'.repeat(45), margem, y); y += 5.5;
+      pdf.text(cfg.representanteNome, margem, y);
+    }
+  });
+
+  // Logo + rodapé em toda página
+  const totalPaginas = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPaginas; i++) {
+    pdf.setPage(i);
+    if (logoBase64) {
+      try {
+        const larguraLogo = 26;
+        const xLogo = config.logo_alinhamento === 'centro' ? (210 - larguraLogo) / 2 : (210 - margem - larguraLogo);
+        pdf.addImage(logoBase64, xLogo, 10, larguraLogo, alturaLogoReal);
+      } catch (e) { /* segue sem travar se a imagem falhar */ }
+    }
+    if (cfg.rodape.length) {
+      pdf.setDrawColor(180); pdf.setLineWidth(0.2);
+      pdf.line(margem, 280, 210 - margem, 280);
+      pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(90);
+      let yRodape = 284;
+      cfg.rodape.forEach(l => { pdf.text(l, 105, yRodape, { align: 'center' }); yRodape += 3.6; });
+    }
+  }
+
+  const blobContrato = pdf.output('blob');
+  baixarPdfBlob(blobContrato, 'contrato_' + (lead.nome || 'lead').replace(/\s+/g,'_') + '.pdf');
+  salvarDocumentoNaPasta(lead.id, 'contrato', blobContrato);
+}
+
+// =====================================================
+// DOCUMENTOS (pasta por lead — checklist + link público)
+// =====================================================
+const TIPOS_DOCUMENTO = [
+  { slug: 'capa', label: 'Capa', obrigatorio: true, gerado: true },
+  { slug: 'cnis', label: 'CNIS', obrigatorio: true, gerado: false },
+  { slug: 'cnh_rg', label: 'CNH ou RG', obrigatorio: true, gerado: false },
+  { slug: 'comprovante_residencia', label: 'Comprovante de residência', obrigatorio: true, gerado: false },
+  { slug: 'contrato', label: 'Contrato do cliente assinado', obrigatorio: true, gerado: true },
+  { slug: 'ctps', label: 'CTPS e outros vínculos', obrigatorio: true, gerado: false },
+  { slug: 'laudo_inss', label: 'Laudo INSS ou documento médico', obrigatorio: true, gerado: false },
+  { slug: 'relatorio', label: 'Relatório', obrigatorio: true, gerado: true },
+  { slug: 'video', label: 'Vídeo', obrigatorio: true, gerado: false },
+  { slug: 'carta_concessao', label: 'Carta de concessão', obrigatorio: false, gerado: false },
+  { slug: 'declaracao_beneficio', label: 'Declaração de benefício', obrigatorio: false, gerado: false }
+];
+
+// Calcula o nome legível da pasta no Storage — mesmo formato usado na migração e nas Edge Functions
+function calcularSlugPasta(cpf, nome) {
+  const cpfDigits = (cpf || '').replace(/\D/g, '');
+  const nomeNormalizado = (nome || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  return cpfDigits + '_' + nomeNormalizado;
+}
+
+async function obterSlugTenantAtual() {
+  const { data } = await supabaseClient.from('tenants').select('slug').eq('id', tenantEfetivo).maybeSingle();
+  return (data || {}).slug || 'sem-tenant';
+}
+
+// Salva um PDF já gerado (Capa/Contrato/Relatório) dentro da pasta do lead, se ela já existir.
+// Se ainda não existe pasta, não faz nada — o documento continua baixando normal pro computador.
+async function salvarDocumentoNaPasta(leadId, tipoSlug, blob) {
+  const { data: pasta } = await supabaseClient.from('pastas_documentos').select('id, slug_pasta').eq('lead_id', leadId).maybeSingle();
+  if (!pasta) return;
+  const prefixoPasta = pasta.slug_pasta || pasta.id;
+  const caminho = prefixoPasta + '/' + tipoSlug + '.pdf';
+  const { error: erroUpload } = await supabaseClient.storage.from('documentos-clientes').upload(caminho, blob, { upsert: true, contentType: 'application/pdf' });
+  if (erroUpload) return;
+  await supabaseClient.from('documentos_pasta').upsert(
+    { pasta_id: pasta.id, tipo_documento: tipoSlug, obrigatorio: true, arquivo_path: caminho, enviado_em: new Date().toISOString() },
+    { onConflict: 'pasta_id,tipo_documento' }
+  );
+}
+
+async function gerarLinkDocumentos(lead) {
+  const resultadoDiv = document.getElementById('ml-link-docs-resultado');
+  resultadoDiv.style.display = 'block';
+  resultadoDiv.textContent = 'Gerando...';
+
+  try {
+    let { data: pasta } = await supabaseClient.from('pastas_documentos').select('*').eq('lead_id', lead.id).maybeSingle();
+    if (!pasta) {
+      const tenantSlug = await obterSlugTenantAtual();
+      const slugPasta = tenantSlug + '/' + calcularSlugPasta(lead.cpf, lead.nome);
+      const { data: novaPasta, error: erroPasta } = await supabaseClient.from('pastas_documentos')
+        .insert({ lead_id: lead.id, tenant_id: tenantEfetivo, slug_pasta: slugPasta }).select().single();
+      if (erroPasta) throw erroPasta;
+      pasta = novaPasta;
+    }
+
+    const linhas = TIPOS_DOCUMENTO.map(t => ({ pasta_id: pasta.id, tipo_documento: t.slug, obrigatorio: t.obrigatorio }));
+    await supabaseClient.from('documentos_pasta').upsert(linhas, { onConflict: 'pasta_id,tipo_documento', ignoreDuplicates: true });
+
+    const link = window.location.origin + '/upload-documentos.html?token=' + pasta.token_upload_publico;
+    resultadoDiv.innerHTML = '<strong>Link gerado:</strong> <a href="'+link+'" target="_blank">'+link+'</a>'
+      + '<br><button class="btn btn-sm btn-secundario" id="ml-btn-copiar-link" style="margin-top:8px;">Copiar link</button> '
+      + '<button class="btn btn-sm btn-secundario" id="ml-btn-whatsapp-link" style="margin-top:8px;">Mandar por WhatsApp</button> '
+      + '<button class="btn btn-sm btn-secundario" id="ml-btn-email-link" style="margin-top:8px;">Mandar por e-mail</button>'
+      + '<div id="ml-email-link-status" style="margin-top:8px; font-size:12px;"></div>';
+
+    document.getElementById('ml-btn-copiar-link').addEventListener('click', () => {
+      navigator.clipboard.writeText(link);
+      alert('Link copiado.');
+    });
+    document.getElementById('ml-btn-whatsapp-link').addEventListener('click', () => {
+      if (!lead.telefone_1) { alert('Este lead não tem telefone principal cadastrado.'); return; }
+      const numeroLimpo = lead.telefone_1.replace(/\D/g, '');
+      const numeroComDDI = numeroLimpo.length <= 11 ? '55' + numeroLimpo : numeroLimpo;
+      const mensagem = 'Olá, ' + (lead.nome || '') + '! Segue o link pra você enviar os documentos do seu caso: ' + link;
+      window.open('https://wa.me/' + numeroComDDI + '?text=' + encodeURIComponent(mensagem), '_blank');
+    });
+    document.getElementById('ml-btn-email-link').addEventListener('click', async () => {
+      const statusSpan = document.getElementById('ml-email-link-status');
+      statusSpan.style.color = 'var(--text-secondary)';
+      statusSpan.textContent = 'Enviando...';
+      const corpoHtml = '<p>Olá, ' + (lead.nome || '') + '!</p><p>Segue o link para você enviar os documentos do seu caso:</p><p><a href="'+link+'">'+link+'</a></p>';
+      const { data: dataEmail, error: erroEmail } = await supabaseClient.functions.invoke('enviar-email', {
+        body: { lead_id: lead.id, assunto: 'Envio de documentos', corpo_html: corpoHtml }
+      });
+      if (erroEmail || (dataEmail && dataEmail.error)) {
+        let msg = dataEmail && dataEmail.error ? dataEmail.error : erroEmail.message;
+        if (erroEmail && erroEmail.context && typeof erroEmail.context.json === 'function') {
+          try { const corpo = await erroEmail.context.json(); if (corpo && corpo.error) msg = corpo.error; } catch (e) {}
+        }
+        statusSpan.style.color = 'var(--danger)';
+        statusSpan.textContent = 'Erro: ' + msg;
+        return;
+      }
+      statusSpan.style.color = 'var(--success)';
+      statusSpan.textContent = 'E-mail enviado.';
+    });
+  } catch (err) {
+    resultadoDiv.textContent = 'Erro: ' + (err.message || JSON.stringify(err));
+  }
+}
+
+async function enviarContratoParaAssinatura(lead) {
+  const resultadoDiv = document.getElementById('ml-zapsign-resultado');
+  resultadoDiv.style.display = 'block';
+  resultadoDiv.style.color = 'var(--text-secondary)';
+  resultadoDiv.textContent = 'Enviando pro ZapSign...';
+
+  const { data, error } = await supabaseClient.functions.invoke('enviar-para-zapsign', { body: { lead_id: lead.id } });
+
+  if (error || (data && data.error)) {
+    let msg = data && data.error ? data.error : error.message;
+    if (error && error.context && typeof error.context.json === 'function') {
+      try { const corpo = await error.context.json(); if (corpo && corpo.error) msg = corpo.error; } catch (e) {}
+    }
+    resultadoDiv.style.color = 'var(--danger)';
+    resultadoDiv.textContent = 'Erro: ' + msg;
+    return;
+  }
+
+  resultadoDiv.style.color = 'var(--success)';
+  resultadoDiv.innerHTML = 'Contrato enviado pro ZapSign! '
+    + (data.signer_url ? '<a href="'+data.signer_url+'" target="_blank">Ver link de assinatura</a>' : 'O cliente já deve receber o link pra assinar (WhatsApp/e-mail, conforme cadastrado).');
+}
+
+let pastasDocumentosAtuais = [];
+let progressoPastasAtual = {};
+
+async function carregarDocumentos() {
+  const tbody = document.getElementById('doc-tabela');
+  tbody.innerHTML = '<tr><td colspan="5" class="vazio">Carregando...</td></tr>';
+
+  let query = supabaseClient.from('pastas_documentos').select('id, criado_em, lead_id, leads_higienizados(nome, cpf)').order('criado_em', { ascending: false });
+  if (tenantEfetivo) query = query.eq('tenant_id', tenantEfetivo);
+  const { data: pastas, error } = await query;
+  if (error) { tbody.innerHTML = '<tr><td colspan="5" class="vazio">Erro: '+error.message+'</td></tr>'; return; }
+  if (!pastas || !pastas.length) { tbody.innerHTML = '<tr><td colspan="5" class="vazio">Nenhuma pasta criada ainda.</td></tr>'; return; }
+
+  const idsPastas = pastas.map(p => p.id);
+  const { data: docs } = await supabaseClient.from('documentos_pasta').select('pasta_id, obrigatorio, arquivo_path').in('pasta_id', idsPastas);
+  progressoPastasAtual = {};
+  (docs || []).forEach(d => {
+    if (!d.obrigatorio) return;
+    if (!progressoPastasAtual[d.pasta_id]) progressoPastasAtual[d.pasta_id] = { total: 0, enviados: 0 };
+    progressoPastasAtual[d.pasta_id].total++;
+    if (d.arquivo_path) progressoPastasAtual[d.pasta_id].enviados++;
+  });
+
+  pastasDocumentosAtuais = pastas;
+  renderizarTabelaDocumentos();
+
+  // Realtime: qualquer documento enviado/excluído em qualquer pasta desta lista atualiza a contagem na hora
+  if (canalRealtimeDocumentosLista) supabaseClient.removeChannel(canalRealtimeDocumentosLista);
+  canalRealtimeDocumentosLista = supabaseClient
+    .channel('documentos_pasta_lista')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'documentos_pasta' }, () => {
+      if (viewAtualId === 'documentos') carregarDocumentos();
+    })
+    .subscribe();
+}
+
+function renderizarTabelaDocumentos() {
+  const tbody = document.getElementById('doc-tabela');
+  const termo = normalizarTexto(document.getElementById('doc-busca').value || '');
+  const filtradas = pastasDocumentosAtuais.filter(p => {
+    if (!termo) return true;
+    const lead = p.leads_higienizados || {};
+    return normalizarTexto(lead.nome).includes(termo) || (lead.cpf || '').includes(termo);
+  });
+
+  if (!filtradas.length) { tbody.innerHTML = '<tr><td colspan="5" class="vazio">Nada encontrado.</td></tr>'; return; }
+
+  tbody.innerHTML = filtradas.map(p => {
+    const lead = p.leads_higienizados || {};
+    const prog = progressoPastasAtual[p.id] || { total: 0, enviados: 0 };
+    const completo = prog.total > 0 && prog.enviados === prog.total;
+    const selo = completo ? 'selo-verde' : 'selo-laranja';
+    return '<tr><td>'+(lead.nome||'-')+'</td><td>'+(lead.cpf||'-')+'</td>'
+      + '<td><span class="selo '+selo+'">'+prog.enviados+' / '+prog.total+'</span></td>'
+      + '<td>'+new Date(p.criado_em).toLocaleDateString('pt-BR')+'</td>'
+      + '<td><button class="btn btn-sm btn-secundario doc-ver-pasta" data-id="'+p.id+'">Ver pasta</button></td></tr>';
+  }).join('');
+
+  tbody.querySelectorAll('.doc-ver-pasta').forEach(btn => {
+    btn.addEventListener('click', () => abrirDetalhePasta(btn.dataset.id));
+  });
+}
+
+document.getElementById('doc-busca').addEventListener('input', renderizarTabelaDocumentos);
+
+let canalRealtimePasta = null; // canal ativo enquanto o modal de pasta está aberto
+let pastaDetalheAtual = null;  // id da pasta atualmente aberta no modal "Ver pasta"
+let canalRealtimeDocumentosLista = null; // canal ativo enquanto a lista de Documentos está aberta
+let canalRealtimeHome = null;
+let canalRealtimeMeusLeads = null;
+let canalRealtimeDistribuicao = null;
+
+async function renderizarDetalhePasta(pastaId) {
+  const { data: pasta } = await supabaseClient.from('pastas_documentos').select('*, leads_higienizados(nome)').eq('id', pastaId).single();
+  const { data: docs } = await supabaseClient.from('documentos_pasta').select('*').eq('pasta_id', pastaId);
+  const docsPorSlug = {};
+  (docs || []).forEach(d => { docsPorSlug[d.tipo_documento] = d; });
+
+  document.getElementById('vp-titulo').textContent = 'Documentos — ' + ((pasta.leads_higienizados || {}).nome || '');
+  const link = window.location.origin + '/upload-documentos.html?token=' + pasta.token_upload_publico;
+  document.getElementById('vp-link').innerHTML = 'Link público: <a href="'+link+'" target="_blank">'+link+'</a> <span style="color:var(--success);">● ao vivo</span>';
+
+  const listaDiv = document.getElementById('vp-lista');
+  listaDiv.innerHTML = '';
+  for (const t of TIPOS_DOCUMENTO) {
+    const doc = docsPorSlug[t.slug];
+    const enviado = doc && doc.arquivo_path;
+    const linha = document.createElement('div');
+    linha.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px;';
+    let seloExtra = '';
+    if (t.slug === 'contrato' && pasta.zapsign_status) {
+      const assinado = pasta.zapsign_status === 'assinado';
+      seloExtra = ' <span class="selo '+(assinado?'selo-verde':'selo-laranja')+'">'+(assinado?'Assinado':'Aguardando assinatura')+'</span>';
+    }
+    linha.innerHTML = '<span>'+t.label+(t.obrigatorio?'':' <span style="color:var(--text-secondary);">(opcional)</span>')+'</span>'
+      + '<span>'+(enviado ? '<span class="selo selo-verde">Enviado</span>' : '<span class="selo selo-laranja">Pendente</span>')+seloExtra+'</span>';
+    if (enviado) {
+      const areaBotoes = linha.querySelector('span:last-child');
+
+      const btnVer = document.createElement('button');
+      btnVer.className = 'btn btn-sm btn-secundario';
+      btnVer.textContent = 'Ver';
+      btnVer.style.marginLeft = '8px';
+      btnVer.addEventListener('click', async () => {
+        const { data: signed } = await supabaseClient.storage.from('documentos-clientes').createSignedUrl(doc.arquivo_path, 300);
+        if (signed) window.open(signed.signedUrl, '_blank');
+      });
+      areaBotoes.appendChild(btnVer);
+
+      const btnExcluir = document.createElement('button');
+      btnExcluir.className = 'btn btn-sm btn-perigo';
+      btnExcluir.textContent = 'Excluir';
+      btnExcluir.style.marginLeft = '6px';
+      btnExcluir.addEventListener('click', async () => {
+        if (!confirm('Excluir este documento? O cliente vai poder enviar outro no lugar (ex: se veio errado ou vencido).')) return;
+        btnExcluir.disabled = true;
+        await supabaseClient.storage.from('documentos-clientes').remove([doc.arquivo_path]);
+        await supabaseClient.from('documentos_pasta').update({ arquivo_path: null, enviado_em: null }).eq('id', doc.id);
+        renderizarDetalhePasta(pastaId);
+      });
+      areaBotoes.appendChild(btnExcluir);
+    }
+    listaDiv.appendChild(linha);
+  }
+}
+
+async function abrirDetalhePasta(pastaId) {
+  pastaDetalheAtual = pastaId;
+  await renderizarDetalhePasta(pastaId);
+  document.getElementById('modal-ver-pasta').style.display = 'flex';
+
+  // Realtime: qualquer envio/exclusão de documento dessa pasta atualiza a tela na hora
+  if (canalRealtimePasta) supabaseClient.removeChannel(canalRealtimePasta);
+  canalRealtimePasta = supabaseClient
+    .channel('documentos_pasta_' + pastaId)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'documentos_pasta', filter: 'pasta_id=eq.' + pastaId }, () => {
+      renderizarDetalhePasta(pastaId);
+      carregarDocumentos(); // atualiza a contagem na tabela de fundo também
+    })
+    .subscribe();
+}
+
+document.getElementById('vp-fechar').addEventListener('click', () => {
+  document.getElementById('modal-ver-pasta').style.display = 'none';
+  if (canalRealtimePasta) { supabaseClient.removeChannel(canalRealtimePasta); canalRealtimePasta = null; }
+  pastaDetalheAtual = null;
+});
+
+// =====================================================
+// CHAT DA PASTA (equipe — dentro do sistema, Realtime de verdade)
+// =====================================================
+let chatPastaAtual = null;    // { id, tenant_id, nomeCliente }
+let canalRealtimeChat = null; // canal ativo só enquanto o modal de chat está aberto
+let gravadorAudio = null;
+let pedacosAudio = [];
+
+document.getElementById('vp-chat').addEventListener('click', async () => {
+  if (!pastaDetalheAtual) return;
+  await abrirChatPasta(pastaDetalheAtual);
+});
+
+// Abre o chat direto a partir da tela "Meus Leads" — cria a pasta de documentos
+// automaticamente se ainda não existir (mesma lógica usada em "Gerar link de documentos"),
+// porque o chat sempre pertence a uma pasta.
+async function abrirChatDoLead(lead) {
+  let { data: pasta, error } = await supabaseClient.from('pastas_documentos').select('id').eq('lead_id', lead.id).maybeSingle();
+  if (error) { alert('Erro ao abrir o chat: ' + error.message); return; }
+  if (!pasta) {
+    const tenantSlug = await obterSlugTenantAtual();
+    const slugPasta = tenantSlug + '/' + calcularSlugPasta(lead.cpf, lead.nome);
+    const { data: novaPasta, error: erroPasta } = await supabaseClient.from('pastas_documentos')
+      .insert({ lead_id: lead.id, tenant_id: tenantEfetivo, slug_pasta: slugPasta }).select('id').single();
+    if (erroPasta) { alert('Erro ao criar a pasta do lead: ' + erroPasta.message); return; }
+    pasta = novaPasta;
+  }
+  await abrirChatPasta(pasta.id);
+}
+
+async function abrirChatPasta(pastaId) {
+  const { data: pasta, error } = await supabaseClient
+    .from('pastas_documentos')
+    .select('id, tenant_id, slug_pasta, leads_higienizados(nome)')
+    .eq('id', pastaId)
+    .single();
+  if (error || !pasta) { alert('Não foi possível abrir o chat desta pasta.'); return; }
+
+  chatPastaAtual = { id: pasta.id, tenant_id: pasta.tenant_id, prefixoPasta: pasta.slug_pasta || pasta.id, nomeCliente: (pasta.leads_higienizados || {}).nome || '' };
+  document.getElementById('chat-titulo').textContent = 'Chat — ' + chatPastaAtual.nomeCliente;
+  document.getElementById('modal-chat-pasta').style.display = 'flex';
+
+  await carregarMensagensChat();
+  await marcarChatComoLido(pasta.id);
+
+  if (canalRealtimeChat) supabaseClient.removeChannel(canalRealtimeChat);
+  canalRealtimeChat = supabaseClient
+    .channel('chat_pasta_' + pasta.id)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensagens_chat_pasta', filter: 'pasta_id=eq.' + pasta.id }, () => {
+      carregarMensagensChat();
+      marcarChatComoLido(pasta.id); // modal já está aberto = está sendo lido na hora
+    })
+    .subscribe();
+}
+
+async function marcarChatComoLido(pastaId) {
+  await supabaseClient.from('chat_leituras').upsert({
+    usuario_id: usuarioAtual.id,
+    pasta_id: pastaId,
+    lida_em: new Date().toISOString()
+  }, { onConflict: 'usuario_id,pasta_id' });
+
+  const leadId = Object.keys(pastaIdPorLead).find(lid => pastaIdPorLead[lid] === pastaId);
+  if (leadId && naoLidasPorLead[leadId]) {
+    delete naoLidasPorLead[leadId];
+    if (viewAtualId === 'meusleads') renderizarListaMeusLeads();
+  }
+}
+
+async function carregarMensagensChat() {
+  if (!chatPastaAtual) return;
+  const { data: mensagens, error } = await supabaseClient
+    .from('mensagens_chat_pasta')
+    .select('id, remetente_tipo, tipo_mensagem, conteudo_texto, arquivo_path, criado_em')
+    .eq('pasta_id', chatPastaAtual.id)
+    .order('criado_em', { ascending: true });
+  if (error) return;
+
+  const container = document.getElementById('chat-mensagens');
+  container.innerHTML = '';
+
+  for (const m of (mensagens || [])) {
+    const minha = m.remetente_tipo === 'equipe';
+    const bolha = document.createElement('div');
+    bolha.style.cssText = 'max-width:80%; padding:8px 12px; border-radius:12px; font-size:13px; align-self:' + (minha ? 'flex-end' : 'flex-start') + ';'
+      + 'background:' + (minha ? 'var(--brand)' : '#fff') + '; color:' + (minha ? '#fff' : '#1A1A1A') + '; border:1px solid ' + (minha ? 'var(--brand)' : 'var(--border)') + ';';
+
+    if (m.tipo_mensagem === 'texto') {
+      bolha.textContent = m.conteudo_texto || '';
+    } else if (m.arquivo_path) {
+      const { data: signed } = await supabaseClient.storage.from('documentos-clientes').createSignedUrl(m.arquivo_path, 3600);
+      const url = signed ? signed.signedUrl : '#';
+      if (m.tipo_mensagem === 'audio') {
+        bolha.innerHTML = '<audio controls src="' + url + '" style="max-width:200px;"></audio>';
+      } else {
+        bolha.innerHTML = '<a href="' + url + '" target="_blank" style="color:inherit; text-decoration:underline;">📎 Ver anexo</a>';
+      }
+    }
+    container.appendChild(bolha);
+  }
+  container.scrollTop = container.scrollHeight;
+}
+
+async function enviarMensagemChatTexto() {
+  const input = document.getElementById('chat-input-texto');
+  const texto = input.value.trim();
+  if (!texto || !chatPastaAtual) return;
+  input.value = '';
+  const { error } = await supabaseClient.from('mensagens_chat_pasta').insert({
+    tenant_id: chatPastaAtual.tenant_id,
+    pasta_id: chatPastaAtual.id,
+    remetente_tipo: 'equipe',
+    remetente_id: usuarioAtual.id,
+    tipo_mensagem: 'texto',
+    conteudo_texto: texto
+  });
+  if (error) { alert('Erro ao enviar mensagem: ' + error.message); input.value = texto; return; }
+  carregarMensagensChat(); // atualiza na hora, sem depender só do Realtime
+}
+
+async function enviarArquivoChat(arquivo, tipoMensagem) {
+  if (!chatPastaAtual || !arquivo) return;
+  const extensao = (arquivo.name.split('.').pop() || 'bin').toLowerCase();
+  const caminho = chatPastaAtual.prefixoPasta + '/chat/' + crypto.randomUUID() + '.' + extensao;
+  const { error: erroUpload } = await supabaseClient.storage.from('documentos-clientes').upload(caminho, arquivo, { upsert: false });
+  if (erroUpload) { alert('Erro ao enviar arquivo: ' + erroUpload.message); return; }
+  const { error: erroInsert } = await supabaseClient.from('mensagens_chat_pasta').insert({
+    tenant_id: chatPastaAtual.tenant_id,
+    pasta_id: chatPastaAtual.id,
+    remetente_tipo: 'equipe',
+    remetente_id: usuarioAtual.id,
+    tipo_mensagem: tipoMensagem,
+    arquivo_path: caminho
+  });
+  if (erroInsert) { alert('Erro ao registrar mensagem: ' + erroInsert.message); return; }
+  carregarMensagensChat();
+}
+
+document.getElementById('chat-btn-enviar').addEventListener('click', enviarMensagemChatTexto);
+document.getElementById('chat-input-texto').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') enviarMensagemChatTexto();
+});
+
+document.getElementById('chat-btn-anexo').addEventListener('click', () => {
+  document.getElementById('chat-input-arquivo').click();
+});
+document.getElementById('chat-input-arquivo').addEventListener('change', async (e) => {
+  const arquivo = e.target.files[0];
+  e.target.value = '';
+  if (arquivo) await enviarArquivoChat(arquivo, 'anexo');
+});
+
+document.getElementById('chat-btn-audio').addEventListener('click', async () => {
+  const aviso = document.getElementById('chat-gravando-aviso');
+  const botao = document.getElementById('chat-btn-audio');
+
+  if (gravadorAudio && gravadorAudio.state === 'recording') {
+    gravadorAudio.stop();
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    pedacosAudio = [];
+    gravadorAudio = new MediaRecorder(stream);
+    gravadorAudio.ondataavailable = (e) => pedacosAudio.push(e.data);
+    gravadorAudio.onstop = async () => {
+      aviso.style.display = 'none';
+      botao.textContent = '🎤';
+      stream.getTracks().forEach(t => t.stop());
+      const blob = new Blob(pedacosAudio, { type: 'audio/webm' });
+      const arquivo = new File([blob], 'audio.webm', { type: 'audio/webm' });
+      await enviarArquivoChat(arquivo, 'audio');
+    };
+    gravadorAudio.start();
+    aviso.style.display = 'block';
+    botao.textContent = '⏹️';
+  } catch (e) {
+    alert('Não foi possível acessar o microfone: ' + e.message);
+  }
+});
+
+document.getElementById('chat-fechar').addEventListener('click', () => {
+  document.getElementById('modal-chat-pasta').style.display = 'none';
+  if (canalRealtimeChat) { supabaseClient.removeChannel(canalRealtimeChat); canalRealtimeChat = null; }
+  chatPastaAtual = null;
+});
+</script>
+
 </body>
 </html>
