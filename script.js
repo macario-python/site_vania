@@ -51,7 +51,7 @@ function urlImagemPublicacao(caminho) {
   return SUPABASE_URL + '/storage/v1/object/public/publicacoes/' + caminho;
 }
 
-var IMAGEM_PADRAO_PUBLICACAO = 'img/balanca.jpg'; // usada quando a publicação não tem foto própria
+var IMAGEM_PADRAO_PUBLICACAO = 'balanca.jpg'; // usada quando a publicação não tem foto própria
 
 async function carregarPublicacoes() {
   var listaDiv = document.getElementById('publicacoes-lista');
