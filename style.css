@@ -138,7 +138,9 @@ section[id] {
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  background: radial-gradient(circle at 80% 20%, var(--wine-700), var(--wine-900) 65%);
+  background:
+    linear-gradient(100deg, rgba(23,9,7,0.94) 0%, rgba(23,9,7,0.86) 38%, rgba(23,9,7,0.55) 68%, rgba(23,9,7,0.28) 100%),
+    url('balanca.jpg') center 30% / cover no-repeat;
   color: var(--cream);
   overflow: hidden;
 }
@@ -147,7 +149,7 @@ section[id] {
   margin: 0 auto;
   padding: 96px 32px 110px;
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: 1fr;
   gap: 40px;
   align-items: center;
 }
@@ -189,17 +191,13 @@ section[id] {
 .hero-text {
   font-size: 15.5px;
   line-height: 1.75;
-  color: rgba(246, 241, 230, 0.82);
+  color: rgba(246, 241, 230, 0.88);
   max-width: 420px;
   margin: 0 0 34px;
 }
-.hero-visual { position: relative; display: flex; justify-content: center; align-items: center; }
-.hero-photo {
-  width: 100%; max-width: 380px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--line-gold);
-}
+.hero-visual { display: none; }
+.hero-photo { display: none; }
+
 
 /* ---------- Sobre ---------- */
 .sobre {
@@ -609,8 +607,7 @@ footer.site-footer {
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 1024px) {
-  .hero-inner { grid-template-columns: 1fr; padding-bottom: 60px; }
-  .hero-visual { order: -1; max-width: 300px; margin: 0 auto; }
+  .hero-inner { padding-bottom: 60px; }
   .diferenciais-grid { grid-template-columns: 1fr 1fr; }
   .contato-grid-novo { grid-template-columns: 1fr; }
   .areas-grid { grid-template-columns: repeat(3, 1fr); row-gap: 44px; }
